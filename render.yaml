@@ -1,9 +1,11 @@
+# render.yaml
 services:
   - type: web
-    name: neurobuddy-backend
+    name: neurobuddy
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn neurobuddy.wsgi:application
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn neuropulse_core.wsgi:application"
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: neurobuddy.settings
+      - key: DEBUG
+        value: False
