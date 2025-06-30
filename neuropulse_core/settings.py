@@ -149,18 +149,21 @@ LOGIN_URL = 'auth_required'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
+# Gemini
+GEMINI_API_KEY = config("GEMINI_API_KEY")
 
-GEMINI_API_KEY = config('GEMINI_API_KEY')
+# Twilio
+TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = config("TWILIO_PHONE_NUMBER")
 
-TWILIO_ACCOUNT_SID = 'TWILIO_ACCOUNT_SID'
-TWILIO_AUTH_TOKEN = 'TWILIO_AUTH_TOKEN'
-TWILIO_PHONE_NUMBER = 'TWILIO_PHONE_NUMBER'
+# Fitbit
+FITBIT_CLIENT_ID = config("FITBIT_CLIENT_ID")
+FITBIT_CLIENT_SECRET = config("FITBIT_CLIENT_SECRET")
+FITBIT_REDIRECT_URI = config("FITBIT_REDIRECT_URI")
 
-FITBIT_CLIENT_ID = 'FITBIT_CLIENT_ID'
-FITBIT_CLIENT_SECRET = 'FITBIT_CLIENT_SECRET'
-FITBIT_REDIRECT_URI = 'FITBIT_REDIRECT_URI'
-
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+# YouTube
+YOUTUBE_API_KEY = config("YOUTUBE_API_KEY")
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -186,19 +189,15 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '979305073246-usgpe8ubtapfrmjmvhbc0kedakphcs38.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
             'key': ''
         },
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
         'OAUTH_PKCE_ENABLED': True,
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
+        'SCOPE': ['profile', 'email'],
     }
 }
-
 ACCOUNT_EMAIL_VERIFICATION = "none"
