@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Data Synced Successfully 🎉</h2>
+  <p>Heart Rate: {{ heart_rate }}</p>
+  <p>Steps: {{ steps }}</p>
+  <p>Sleep Hours: {{ sleep_hours }}</p>
+  <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+{% endblock %}

@@ -1,0 +1,135 @@
+<style>
+    /* Emergency Alerts Styles */
+    .alerts-container {
+        background: rgba(231, 76, 60, 0.08);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-left: 4px solid #e74c3c;
+    }
+
+    .dark-theme .alerts-container {
+        background: rgba(231, 76, 60, 0.12);
+        border-left-color: #e74c3c;
+    }
+
+    .alerts-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        color: #e74c3c;
+    }
+
+    .alerts-header h2 {
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .alerts-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .alert-item {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: flex-start;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1);
+        transition: all 0.3s ease;
+        border-left: 3px solid #e74c3c;
+    }
+
+    .dark-theme .alert-item {
+        background: #1e1e1e;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .alert-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+    }
+
+    .alert-item::before {
+        content: '⚠️';
+        margin-right: 0.75rem;
+        font-size: 1.2rem;
+    }
+
+    .alert-time {
+        color: #7f8c8d;
+        font-size: 0.85rem;
+        margin-right: 0.75rem;
+        min-width: 120px;
+    }
+
+    .dark-theme .alert-time {
+        color: #b0b0b0;
+    }
+
+    .alert-type {
+        font-weight: 600;
+        color: #e74c3c;
+        margin-right: 0.75rem;
+        text-transform: capitalize;
+    }
+
+    .alert-message {
+        flex: 1;
+    }
+
+    .no-alerts {
+        text-align: center;
+        padding: 1rem;
+        color: #7f8c8d;
+        font-style: italic;
+    }
+
+    .dark-theme .no-alerts {
+        color: #b0b0b0;
+    }
+
+    /* Animation */
+    @keyframes pulseAlert {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    .alerts-header {
+        animation: pulseAlert 2s infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .alert-item {
+            flex-direction: column;
+        }
+        
+        .alert-time {
+            margin-bottom: 0.25rem;
+        }
+    }
+</style>
+
+<div class="alerts-container">
+    <div class="alerts-header">
+        <h2><i class="fas fa-exclamation-triangle me-2"></i>Recent Emergency Alerts</h2>
+    </div>
+    
+    <ul class="alerts-list">
+        {% for alert in alerts %}
+            <li class="alert-item">
+                <span class="alert-time">{{ alert.triggered_at|date:"M j, Y H:i" }}</span>
+                <span class="alert-type">{{ alert.alert_type }}</span>
+                <span class="alert-message">{{ alert.message }}</span>
+            </li>
+        {% empty %}
+            <li class="no-alerts">No alerts recorded. This is good news!</li>
+        {% endfor %}
+    </ul>
+</div>

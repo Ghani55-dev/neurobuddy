@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Mood Chart Styles */
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 2.5rem;
+        margin: 2rem auto;
+        max-width: 900px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark-theme .glass-panel {
+        background: rgba(30, 30, 30, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, transparent 70%);
+        z-index: -1;
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .chart-container {
+        position: relative;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+    }
+
+    .dark-theme .chart-container {
+        background: rgba(30, 30, 30, 0.2);
+    }
+
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+    }
+
+    .mood-description {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        border-left: 4px solid #6a11cb;
+    }
+
+    .dark-theme .mood-description {
+        background: rgba(30, 30, 30, 0.2);
+        border-left-color: #8a2be2;
+    }
+
+    .mood-description h4 {
+        color: #6a11cb;
+        margin-bottom: 1rem;
+    }
+
+    .dark-theme .mood-description h4 {
+        color: #8a2be2;
+    }
+
+    .mood-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        min-width: 150px;
+        flex: 1;
+    }
+
+    .dark-theme .stat-card {
+        background: rgba(30, 30, 30, 0.2);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .dark-theme .stat-label {
+        color: #b0b0b0;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .glass-panel {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .glass-panel {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .text-gradient {
+            font-size: 1.8rem;
+        }
+        
+        .mood-stats {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="glass-panel">
+    <h2 class="text-gradient">Mood Chart</h2>
+    <p class="text-muted">Your emotional journey over the last 7 days</p>
+    
+    <div class="chart-container">
+        <canvas id="moodChart" height="300"></canvas>
+    </div>
+    
+    <div class="chart-legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background: #8e44ad;"></div>
+            <span>Daily Mood</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: rgba(142, 68, 173, 0.1);"></div>
+            <span>Mood Range</span>
+        </div>
+    </div>
+    
+    <div class="mood-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ average_mood|floatformat:1 }}</div>
+            <div class="stat-label">Average Mood</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ highest_mood }}</div>
+            <div class="stat-label">Highest Day</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ lowest_mood }}</div>
+            <div class="stat-label">Lowest Day</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ improvement }}%</div>
+            <div class="stat-label">Weekly Change</div>
+        </div>
+    </div>
+    
+    <div class="mood-description">
+        <h4><i class="fas fa-lightbulb me-2"></i>Insights</h4>
+        <p>{{ mood_insight }}</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('moodChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Mood Score',
+                    data: {{ mood_scores|safe }},
+                    borderColor: '#8e44ad',
+                    backgroundColor: 'rgba(142, 68, 173, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#8e44ad',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = 'Mood: ' + context.parsed.y;
+                                const moods = ['Very Low', 'Low', 'Neutral', 'Good', 'Very Good'];
+                                return [label, 'Feeling: ' + moods[context.parsed.y - 1]];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 1,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                const moods = ['Very Low', 'Low', 'Neutral', 'Good', 'Very Good'];
+                                return moods[value - 1];
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+        
+        // Add animation to stat cards
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            card.style.animation = `fadeIn 0.6s ease-out ${index * 0.1}s forwards`;
+            card.style.opacity = '0';
+        });
+    });
+</script>
+{% endblock %}

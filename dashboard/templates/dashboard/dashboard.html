@@ -1,0 +1,766 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  :root {
+    --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    --secondary-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --text-dark: #2c3e50;
+    --text-light: #f8f9fa;
+    --card-dark: #1e1e1e;
+    --card-light: #ffffff;
+  }
+
+  /* Dark Theme Overrides */
+  .dark-theme {
+    --glass-bg: rgba(30, 30, 30, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Floating particles background */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    filter: blur(1px);
+    animation: float 15s infinite linear;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+  }
+
+  /* Glassmorphism card effect - Enhanced for dark mode */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+  }
+
+  .dark-theme .glass-card {
+    color: var(--text-light);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+  }
+
+  /* Text elements with dark mode support */
+  .glass-card h1, .glass-card h2, .glass-card h3, 
+  .glass-card h4, .glass-card h5, .glass-card h6 {
+    color: var(--text-dark);
+  }
+
+  .dark-theme .glass-card h1, .dark-theme .glass-card h2, 
+  .dark-theme .glass-card h3, .dark-theme .glass-card h4,
+  .dark-theme .glass-card h5, .dark-theme .glass-card h6 {
+    color: var(--text-light);
+  }
+
+  .glass-card p, .glass-card span, .glass-card div {
+    color: var(--text-dark);
+  }
+
+  .dark-theme .glass-card p, .dark-theme .glass-card span, 
+  .dark-theme .glass-card div {
+    color: var(--text-light);
+  }
+
+  /* Animated gradient text */
+  .text-gradient {
+    background: linear-gradient(90deg, #6a11cb, #2575fc, #6a11cb);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shine 3s linear infinite;
+  }
+
+  @keyframes gradient-shine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* 3D button effect */
+  .btn-3d {
+    position: relative;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+  }
+
+  .btn-3d:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-3d:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Floating animation */
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  @keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  /* Entry card - Enhanced for dark mode */
+  .entry-card {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    background: rgba(240, 244, 248, 0.7);
+    color: var(--text-dark);
+  }
+
+  .dark-theme .entry-card {
+    background: rgba(30, 30, 30, 0.7);
+    color: var(--text-light);
+  }
+
+  .entry-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+  }
+
+  .entry-card:hover::before {
+    left: 100%;
+  }
+
+  /* Mood status - Enhanced for dark mode */
+  .mood-status {
+    position: relative;
+    overflow: hidden;
+    background: rgba(108, 117, 125, 0.1);
+    color: var(--text-dark);
+  }
+
+  .dark-theme .mood-status {
+    background: rgba(108, 117, 125, 0.3);
+    color: var(--text-light);
+  }
+
+  /* Responsive typography */
+  h1.display-4 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+    color: var(--text-dark);
+  }
+
+  .dark-theme h1.display-4 {
+    color: var(--text-light);
+  }
+
+  .lead {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    color: var(--text-dark);
+  }
+
+  .dark-theme .lead {
+    color: var(--text-light);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+
+  .dark-theme ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Dashboard grid layout */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Text contrast improvements */
+  .text-dark {
+    color: var(--text-dark) !important;
+  }
+
+  .dark-theme .text-dark {
+    color: var(--text-light) !important;
+  }
+
+  .text-muted {
+    color:rgb(10, 10, 10) !important;
+  }
+
+  .dark-theme .text-muted {
+    color:rgb(255, 255, 255) !important;
+  }
+
+  /* Badge styling */
+  .badge {
+    color: white !important;
+  }
+/* Streak Display - Dark Theme */
+.streak-display {
+    margin: 1rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    
+    &.glassmorphism-card {
+        background: rgba(30, 30, 30, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.streak-active {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(255, 82, 82, 0.15) 0%, rgba(255, 154, 0, 0.15) 100%);
+    border-left: 4px solid #ff6d00;
+    
+    &.pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    .streak-icon {
+        margin-right: 1.25rem;
+        
+        i {
+            font-size: 2rem;
+            color: #ff9100;
+            text-shadow: 0 0 12px rgba(255, 145, 0, 0.5);
+        }
+    }
+    
+    .streak-content {
+        .streak-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #ffab40;
+        }
+        
+        .streak-message {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+            
+            .streak-count {
+                font-size: 1.1em;
+                font-weight: 700;
+                color: #ffab40;
+                background: linear-gradient(to right, #ff6d00, #ffab40);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                padding: 0 2px;
+            }
+            
+            .keep-going {
+                font-style: italic;
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+.streak-inactive {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    border-left: 4px solid rgba(255, 255, 255, 0.1);
+    
+    .streak-icon {
+        margin-right: 1.25rem;
+        
+        i {
+            font-size: 1.8rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+    }
+    
+    .streak-content {
+        .streak-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .streak-message {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 109, 0, 0.2);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(255, 109, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 109, 0, 0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .streak-active, .streak-inactive {
+        padding: 1rem;
+        
+        .streak-icon i {
+            font-size: 1.6rem;
+        }
+        
+        .streak-content {
+            .streak-title {
+                font-size: 1rem;
+            }
+            
+            .streak-message {
+                font-size: 0.9rem;
+            }
+        }
+    }
+}
+</style>
+<!-- Particles Background -->
+<div class="particles">
+  {% for i in "x"|rjust:"50" %}
+  <div class="particle"></div>
+  {% endfor %}
+</div>
+<div class="container mt-4">
+  <!-- Header Section -->
+  <div class="text-center mb-5 py-5 floating">
+    <h1 class="display-4 fw-bold text-gradient mb-3">NeuroBuddy</h1>
+    <p class="lead text-muted">Decode Emotions. Elevate Life.</p>
+    <div class="d-flex justify-content-center mt-3">
+      <div style="width: 100px; height: 3px; background: var(--primary-gradient); border-radius: 3px;"></div>
+    </div>
+  </div>
+
+  <!-- Welcome Message -->
+  <div class="glass-card mb-4">
+    <div class="card-body text-center py-4">
+      <h2 class="fw-light mb-3">Welcome, <span class="text-gradient fw-bold">{{ user.username }}</span> 👋</h2>
+      <p class="mb-0">Your personal mental wellness dashboard is ready.</p>
+    </div>
+  </div>
+
+<div class="streak-display glassmorphism-card">
+    {% if current_streak > 0 %}
+    <div class="streak-active pulse-animation">
+        <div class="streak-icon">
+            <i class="fas fa-fire"></i>
+        </div>
+        <div class="streak-content">
+            <h6 class="streak-title">🔥 Current Streak!</h6>
+            <p class="streak-message" style="color: white;">You're on a <span class="streak-count">{{ streak_message }}</span></p>
+        </div>
+    </div>
+    {% else %}
+    <div class="streak-inactive">
+        <div class="streak-icon">
+            <i class="fas fa-fire"></i>
+        </div>
+        <div class="streak-content">
+            <h6 class="streak-title">Streak Counter</h6>
+            <p class="streak-message">{{ streak_message }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+  <!-- Quick Actions -->
+  <div class="glass-card mb-4">
+    <div class="card-body">
+      <h5 class="card-title fw-bold text-primary mb-4">Quick Actions</h5>
+      <div class="dashboard-grid">
+        <a href="{% url 'submit_mood' %}" class="btn btn-3d btn-primary d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-plus-circle me-2"></i> Track Mood
+        </a>
+        <a href="{% url 'mood_history' %}" class="btn btn-3d btn-secondary d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-history me-2"></i> History
+        </a>
+        <a href="{% url 'mood_chart' %}" class="btn btn-3d btn-info d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-chart-line me-2"></i> Charts
+        </a>
+        <a href="{% url 'gpt_summary' %}" class="btn btn-3d btn-dark d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-brain me-2"></i> AI Summary
+        </a>
+        <a href="{% url 'neurogoals' %}" class="btn btn-3d btn-success d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-bullseye me-2"></i> Goals
+        </a>
+        <a href="{% url 'suggest_goals' %}" class="btn btn-3d btn-warning d-flex align-items-center justify-content-center py-3">
+          <i class="fas fa-robot me-2"></i> AI Suggest
+        </a>
+<a href="{% url 'chatbot' %}" class="btn btn-3d btn-info d-flex align-items-center justify-content-center py-3">
+  <i class="fas fa-robot me-2"></i> AI Assistant
+</a>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Journal Preview - Enhanced for dark mode -->
+  <div class="glass-card mb-4">
+    <div class="card-body">
+      <h5 class="fw-bold text-primary mb-4 d-flex align-items-center">
+        <i class="fas fa-book-open me-2"></i> Recent Journals
+      </h5>
+      <div class="recent-entries">
+        {% if recent_entries %}
+          {% for entry in recent_entries %}
+            <div class="entry-card mb-3 p-3 rounded-3" style="border-left: 4px solidrgb(96, 245, 220);">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong style="color: blue">{{ entry.date }}</strong>
+                <span class="badge rounded-pill" style="background: #4e8cff;">
+                  Mood: {{ entry.mood_score }} / 5
+                </span>
+              </div>
+              <p class="mb-0">{{ entry.note|default:"No note."|truncatechars:120 }}</p>
+              <p class="mb-0">{{ entry.ai_insight|default:"No note."|truncatechars:1000 }}</p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-4">
+            <i class="fas fa-pen-fancy text-muted mb-3" style="font-size: 2rem;"></i>
+            <p class="text-muted">No journal entries yet. Start tracking your mood!</p>
+            <a href="{% url 'submit_mood' %}" class="btn btn-sm btn-primary mt-2">Add First Entry</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Mood Status -->
+  {% if user.is_authenticated %}
+    <div class="glass-card mb-4">
+      <div class="card-body">
+        <h5 class="fw-bold text-primary mb-3 d-flex align-items-center">
+          <i class="fas fa-brain me-2"></i> Latest Mood
+        </h5>
+        {% with latest_mood=user.moodentry_set.last %}
+          {% if latest_mood %}
+            <div class="mood-status alert py-3 rounded-3" style="border-left: 4px solid #4e8cff;">
+              <div class="d-flex flex-column flex-md-row justify-content-between">
+                <div class="mb-2 mb-md-0">
+                  <span class="fw-bold">{{ latest_mood.date }}</span> - 
+                  <span class="badge rounded-pill bg-primary">{{ latest_mood.get_mood_score_display }}</span>
+                </div>
+                <div>
+                  <span class="text-muted">Sentiment:</span>
+                  <span class="fw-bold ms-1">{{ latest_mood.sentiment }}</span>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="text-center py-3">
+              <i class="fas fa-smile text-muted mb-2" style="font-size: 1.5rem;"></i>
+              <p class="text-muted mb-0">No mood submitted yet.</p>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Streak Notification -->
+  {% comment %} {% if streak %}
+    <div class="glass-card mb-4 pulse" style="background: rgba(255, 193, 7, 0.15); border-left: 4px solid #ffc107;">
+      <div class="card-body py-3">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-fire text-warning me-3" style="font-size: 1.5rem;"></i>
+          <div>
+            <h6 class="mb-0 fw-bold">🔥 Current Streak!</h6>
+            <p class="mb-0">You're on a <span class="fw-bold">{{ streak }}</span> day streak! Keep it going!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %} {% endcomment %}
+
+  <!-- AI Suggestion -->
+  <h4 style="color: green;">{{ welcome_message }}</h4>
+
+{% comment %} {% if suggestions.quote %}
+  <div class="glass-card mb-3 border-start border-4 border-primary p-3">
+    <h5 class="text-primary"><i class="fas fa-quote-left"></i> Motivational Quote</h5>
+    <p class="fst-italic mb-0">{{ suggestions.quote.content }}</p>
+  </div>
+{% endif %}
+
+{% if suggestions.tip %}
+  <div class="glass-card mb-3 border-start border-4 border-success p-3">
+    <h5 class="text-success"><i class="fas fa-lightbulb"></i> Wellness Tip</h5>
+    <p>{{ suggestions.tip.content }}</p>
+  </div>
+{% endif %}
+
+{% if suggestions.video %}
+ <div class="card bg-info text-dark mb-3" style="max-width: 400px;">
+  <div class="card-header">
+    <i class="fas fa-video"></i> Uplifting Video
+  </div>
+  <div class="card-body">
+    {% if suggestions.video.video_url %}
+      <div class="ratio ratio-16x9" style="width: 100%; max-width: 350px;">
+        <iframe 
+          width="350" 
+          height="200"
+          src="{{ suggestions.video.video_url }}" 
+          title="Uplifting Video"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+      </div>
+    {% else %}
+      <p>No video available at the moment.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endif %} {% endcomment %}
+
+  <!-- Empty State Illustration -->
+  {% if not recent_entries and not suggestion %}
+    <div class="glass-card text-center py-5">
+      <img src="https://img.icons8.com/fluency/96/000000/mental-health.png" alt="Mental Health" class="mb-4" style="opacity: 0.8;">
+      <h5 class="fw-bold mb-3">Let's Get Started!</h5>
+      <p class="text-muted mb-4">Track your first mood to unlock personalized insights and recommendations.</p>
+      <a href="{% url 'submit_mood' %}" class="btn btn-primary btn-3d px-4 py-2">
+        <i class="fas fa-plus-circle me-2"></i> Add Mood Entry
+      </a>
+    </div>
+  {% endif %}
+{% if heart_rate > 120 %}
+  <div class="alert alert-danger">⚠️ Emergency! High Heart Rate Detected: {{ heart_rate }} BPM</div>
+{% endif %}
+  {% if show_reminder %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const notification = document.createElement('div');
+      notification.innerHTML = `
+        <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+          <div class="glass-card" style="padding: 15px; max-width: 300px; animation: slideIn 0.5s forwards;">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-bell me-3 text-warning" style="font-size: 1.5rem;"></i>
+              <div>
+                <h6 class="mb-1 fw-bold">Daily Reminder</h6>
+                <p class="mb-0 small">Don't forget to log your mood today!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.querySelector('.glass-card').style.animation = 'slideOut 0.5s forwards';
+        setTimeout(() => notification.remove(), 500);
+      }, 5000);
+    });
+  </script>
+  {% endif %}
+</div>
+
+{% if suggestions %}
+  {% for type, suggestion in suggestions.items %}
+    {% if suggestion %}
+      <div class="glass-card mb-3 p-3 border-start border-4 
+                  {% if type == 'quote' %}border-primary{% elif type == 'tip' %}border-success{% else %}border-info{% endif %}">
+        <h5 class="text-capitalize">
+          {% if type == "quote" %}
+            <i class="fas fa-quote-left text-primary"></i> Motivational Quote
+          {% elif type == "tip" %}
+            <i class="fas fa-lightbulb text-success"></i> Wellness Tip
+          {% elif type == "video" %}
+            <i class="fas fa-video text-info"></i> Uplifting Video
+          {% endif %}
+        </h5>
+
+        {% if type == "video" and suggestion.video_url %}
+          <div class="ratio ratio-16x9 mb-2" style="max-width: 400px;">
+            <iframe width="320" height="180" src="{{ suggestion.video_url }}" allowfullscreen frameborder="0"></iframe>
+          </div>
+        {% else %}
+          <p class="{% if type == 'quote' %}fst-italic{% endif %} mb-2">{{ suggestion.content }}</p>
+        {% endif %}
+
+        <form method="POST" class="suggestion-feedback-form d-flex gap-2">
+          {% csrf_token %}
+          <input type="hidden" name="suggestion_id" value="{{ suggestion.id }}">
+          <button type="submit" name="feedback" value="like" class="btn btn-success btn-sm">👍 Like</button>
+          <button type="submit" name="feedback" value="dislike" class="btn btn-danger btn-sm">👎 Dislike</button>
+          <div class="feedback-badge mt-2"></div>
+        </form>
+
+      </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <p class="text-muted">No AI suggestions available today.</p>
+{% endif %}
+
+<script>
+function getCSRFToken() {
+  return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const forms = document.querySelectorAll(".suggestion-feedback-form");
+
+  forms.forEach(form => {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const suggestionId = form.querySelector("input[name=suggestion_id]").value;
+      const feedbackValue = form.querySelector("button[type=submit][clicked=true]").value;
+      const card = form.closest(".glass-card, .card");
+      const badgeContainer = form.querySelector(".feedback-badge");
+
+      fetch("{% url 'suggestion_feedback' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify({
+          suggestion_id: suggestionId,
+          feedback: feedbackValue
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          badgeContainer.innerHTML = ""; // Clear old badge
+          if (feedbackValue === "dislike") {
+            card.remove();
+          } else {
+            badgeContainer.innerHTML = `<span class="badge bg-success">You liked this ✅</span>`;
+          }
+        } else {
+          alert("⚠️ Error: " + data.error);
+        }
+      })
+      .catch(error => {
+        alert("⚠️ AJAX error: " + error);
+      });
+    });
+
+    const buttons = form.querySelectorAll("button[type=submit]");
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        buttons.forEach(btn => btn.removeAttribute("clicked"));
+        button.setAttribute("clicked", "true");
+      });
+    });
+  });
+});
+</script>
+        <!-- Feedback Form -->
+
+
+<form method="post" action="{% url 'refresh_suggestion' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-outline-primary btn-sm">
+    🔄 Refresh Suggestion
+  </button>
+</form>
+<canvas id="wearableChart" width="400" height="100"></canvas>
+
+<script>
+  fetch('/wearable/chart-data/')
+    .then(res => res.json())
+    .then(data => {
+      const ctx = document.getElementById('wearableChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Heart Rate',
+              data: data.heart_rates,
+              borderColor: 'red',
+              fill: false,
+            },
+            {
+              label: 'Steps',
+              data: data.steps,
+              borderColor: 'blue',
+              fill: false,
+            },
+            {
+              label: 'Sleep (hrs)',
+              data: data.sleep_hours,
+              borderColor: 'green',
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    });
+</script>
+
+{% endblock %}

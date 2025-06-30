@@ -1,0 +1,276 @@
+<style>
+    /* Mood Form Styles */
+    .mood-form-container {
+        background: rgba(106, 17, 203, 0.05);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(106, 17, 203, 0.1);
+    }
+
+    .dark-theme .mood-form-container {
+        background: rgba(138, 43, 226, 0.08);
+        border-color: rgba(138, 43, 226, 0.2);
+    }
+
+    .mood-input {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .mood-input input {
+        flex: 1;
+        padding: 0.85rem 1.25rem;
+        border: 1px solid rgba(106, 17, 203, 0.3);
+        border-radius: 50px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .dark-theme .mood-input input {
+        background: #1e1e1e;
+        border-color: rgba(138, 43, 226, 0.4);
+        color: white;
+    }
+
+    .mood-input input:focus {
+        outline: none;
+        border-color: #6a11cb;
+        box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+    }
+
+    .mood-input button {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        padding: 0.85rem 1.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .mood-input button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+    }
+
+    /* Goals Styles */
+    .goals-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .dark-theme .goals-container {
+        background: #1e1e1e;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .goals-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        color: #6a11cb;
+    }
+
+    .dark-theme .goals-header {
+        color: #8a2be2;
+    }
+
+    .goals-header h2 {
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .goals-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .goal-item {
+        padding: 1.25rem;
+        margin-bottom: 0.75rem;
+        background: rgba(106, 17, 203, 0.03);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 3px solid #6a11cb;
+    }
+
+    .dark-theme .goal-item {
+        background: rgba(138, 43, 226, 0.08);
+        border-left-color: #8a2be2;
+    }
+
+    .goal-item:hover {
+        transform: translateX(5px);
+        background: rgba(106, 17, 203, 0.08);
+    }
+
+    .dark-theme .goal-item:hover {
+        background: rgba(138, 43, 226, 0.15);
+    }
+
+    .goal-text {
+        flex: 1;
+        margin-right: 1rem;
+    }
+
+    .goal-progress {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .goal-checkbox {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 2px solid #6a11cb;
+        appearance: none;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .goal-checkbox:checked {
+        background-color: #6a11cb;
+        border-color: #6a11cb;
+    }
+
+    .goal-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        color: white;
+        font-size: 12px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .goal-date {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+    }
+
+    .dark-theme .goal-date {
+        color: #b0b0b0;
+    }
+
+    .no-goals {
+        text-align: center;
+        padding: 1.5rem;
+        color: #7f8c8d;
+        font-style: italic;
+    }
+
+    .dark-theme .no-goals {
+        color: #b0b0b0;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .goal-item {
+        animation: fadeIn 0.4s ease-out forwards;
+        animation-delay: calc(var(--i) * 0.1s);
+        opacity: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .mood-input {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .mood-input input,
+        .mood-input button {
+            width: 100%;
+        }
+        
+        .goal-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .goal-progress {
+            margin-top: 0.75rem;
+            align-self: flex-end;
+        }
+    }
+</style>
+
+<div class="mood-form-container">
+    <form method="post" class="mood-input">
+        {% csrf_token %}
+        <input type="text" name="mood_input" placeholder="How are you feeling today?" required>
+        <button type="submit">
+            <i class="fas fa-lightbulb me-2"></i>Get Suggestions
+        </button>
+    </form>
+</div>
+
+<div class="goals-container">
+    <div class="goals-header">
+        <h2><i class="fas fa-bullseye me-2"></i>Your Goals Today</h2>
+    </div>
+    
+    <ul class="goals-list">
+        {% for goal in todays_goals %}
+            <li class="goal-item" style="--i: {{ forloop.counter0 }};">
+                <div class="goal-text">{{ goal.text }}</div>
+                <div class="goal-progress">
+                    {% for p in goal.progress.all %}
+                        <input type="checkbox" 
+                               class="goal-checkbox" 
+                               data-id="{{ p.id }}" 
+                               {% if p.completed %}checked{% endif %}>
+                        <span class="goal-date">{{ p.date|date:"M j" }}</span>
+                    {% endfor %}
+                </div>
+            </li>
+        {% empty %}
+            <li class="no-goals">No goals for today yet. Add some to stay productive!</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+document.querySelectorAll('.goal-checkbox').forEach(box => {
+    box.addEventListener('change', (e) => {
+        // Visual feedback
+        if (box.checked) {
+            box.parentElement.parentElement.style.opacity = '0.7';
+            box.parentElement.parentElement.style.textDecoration = 'line-through';
+        } else {
+            box.parentElement.parentElement.style.opacity = '1';
+            box.parentElement.parentElement.style.textDecoration = 'none';
+        }
+        
+        // Send request
+        fetch(`/goal/toggle/${box.dataset.id}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (!response.ok) {
+                box.checked = !box.checked; // Revert if failed
+            }
+        });
+    });
+});
+</script>

@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* Summary Page Styles */
+    .summary-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark-theme .summary-container {
+        background: #1e1e1e;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .summary-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .summary-header h2 {
+        font-weight: 700;
+        color: #6a11cb;
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .dark-theme .summary-header h2 {
+        color: #8a2be2;
+    }
+
+    .summary-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        border-radius: 2px;
+    }
+
+    .summary-card {
+        padding: 2rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(106, 17, 203, 0.05), rgba(37, 117, 252, 0.05));
+        border: 1px solid rgba(106, 17, 203, 0.1);
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark-theme .summary-card {
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.08), rgba(0, 212, 255, 0.08));
+        border-color: rgba(138, 43, 226, 0.2);
+    }
+
+    .summary-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #6a11cb, #2575fc);
+    }
+
+    .summary-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2c3e50;
+    }
+
+    .dark-theme .summary-content {
+        color: #f8f9fa;
+    }
+
+    .summary-highlight {
+        background: linear-gradient(135deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.1));
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .summary-footer {
+        margin-top: 2rem;
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .dark-theme .summary-footer {
+        color: #b0b0b0;
+    }
+
+    .summary-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .summary-btn {
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .summary-btn-primary {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+    }
+
+    .summary-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+    }
+
+    .summary-btn-secondary {
+        background: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+    }
+
+    .dark-theme .summary-btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #f8f9fa;
+    }
+
+    .summary-btn-secondary:hover {
+        background: rgba(108, 117, 125, 0.2);
+    }
+
+    .dark-theme .summary-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .summary-container {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .summary-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .summary-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .summary-content {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="summary-container">
+    <div class="summary-header">
+        <h2>Weekly Mood Summary</h2>
+    </div>
+    
+    <div class="summary-card">
+        <div class="summary-content">
+            {{ summary|linebreaksbr }}
+        </div>
+    </div>
+    
+    <div class="summary-actions">
+        <button class="summary-btn summary-btn-primary">
+            <i class="fas fa-share-alt"></i> Share
+        </button>
+        <button class="summary-btn summary-btn-secondary">
+            <i class="fas fa-download"></i> Download
+        </button>
+    </div>
+    
+    <div class="summary-footer">
+        <p>Your mood insights are generated weekly based on your journal entries and self-reports.</p>
+    </div>
+</div>
+
+<script>
+    // Add interactivity to the summary page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight key phrases in the summary
+        const summaryContent = document.querySelector('.summary-content');
+        if (summaryContent) {
+            const text = summaryContent.textContent;
+            
+            // These are example keywords you might want to highlight
+            const keywords = ['improvement', 'challenge', 'progress', 'recommend', 'suggest'];
+            
+            let highlightedText = text;
+            keywords.forEach(word => {
+                const regex = new RegExp(word, 'gi');
+                highlightedText = highlightedText.replace(regex, 
+                    `<span class="summary-highlight">${word}</span>`);
+            });
+            
+            summaryContent.innerHTML = highlightedText;
+        }
+        
+        // Share button functionality
+        document.querySelector('.summary-btn-primary').addEventListener('click', function() {
+            // In a real implementation, this would open a share dialog
+            alert('Share functionality would open here. In a real app, this would let you share your mood summary with your therapist or support network.');
+        });
+        
+        // Download button functionality
+        document.querySelector('.summary-btn-secondary').addEventListener('click', function() {
+            // In a real implementation, this would download a PDF
+            alert('Download functionality would generate a PDF report here.');
+        });
+    });
+</script>
+{% endblock %}

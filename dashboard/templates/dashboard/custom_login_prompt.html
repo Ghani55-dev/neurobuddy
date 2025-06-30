@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center mt-5">
+  <h2 class="mb-3">🔐 Access Restricted</h2>
+  <p>You need to <a href="{% url 'login' %}">log in</a> to access the dashboard.</p>
+  <p>Don't have an account? <a href="{% url 'register' %}">Create one here</a>.</p>
+</div>
+{% endblock %}

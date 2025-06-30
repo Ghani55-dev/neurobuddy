@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* NeuroBuddy Container */
+    .neurobuddy-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .dark-theme .neurobuddy-container {
+        background: #1e1e1e;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Header Styles */
+    .neurobuddy-header {
+        color: #6a11cb;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .dark-theme .neurobuddy-header {
+        color: #8a2be2;
+    }
+
+    .neurobuddy-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        border-radius: 2px;
+    }
+
+    /* Chat Form Styles */
+    .chat-form {
+        margin-bottom: 3rem;
+        background: rgba(106, 17, 203, 0.05);
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    .dark-theme .chat-form {
+        background: rgba(138, 43, 226, 0.08);
+    }
+
+    .chat-form input {
+        width: 100%;
+        padding: 0.85rem 1.25rem;
+        border: 1px solid rgba(106, 17, 203, 0.3);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .dark-theme .chat-form input {
+        background: #1e1e1e;
+        border-color: rgba(138, 43, 226, 0.4);
+        color: white;
+    }
+
+    .chat-form input:focus {
+        outline: none;
+        border-color: #6a11cb;
+        box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+    }
+
+    .chat-form button {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .chat-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+    }
+
+    /* Response Styles */
+    .response-container {
+        margin-bottom: 3rem;
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .response-header {
+        color: #6a11cb;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dark-theme .response-header {
+        color: #8a2be2;
+    }
+
+    .response-content {
+        background: rgba(106, 17, 203, 0.03);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #6a11cb;
+        line-height: 1.6;
+    }
+
+    .dark-theme .response-content {
+        background: rgba(138, 43, 226, 0.08);
+        border-left-color: #8a2be2;
+    }
+
+    /* Tips Form Styles */
+    .tips-form {
+        margin-bottom: 3rem;
+        background: rgba(46, 204, 113, 0.05);
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    .dark-theme .tips-form {
+        background: rgba(46, 204, 113, 0.08);
+    }
+
+    .tips-form input {
+        width: 100%;
+        padding: 0.85rem 1.25rem;
+        border: 1px solid rgba(46, 204, 113, 0.3);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .dark-theme .tips-form input {
+        background: #1e1e1e;
+        border-color: rgba(46, 204, 113, 0.4);
+        color: white;
+    }
+
+    .tips-form input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+    }
+
+    .tips-form button {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .tips-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    /* Tips Response Styles */
+    .tips-response-container {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .tips-header {
+        color: #2ecc71;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-content {
+        background: rgba(46, 204, 113, 0.03);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #2ecc71;
+        line-height: 1.6;
+    }
+
+    .dark-theme .tips-content {
+        background: rgba(46, 204, 113, 0.08);
+        border-left-color: #2ecc71;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .neurobuddy-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .chat-form,
+        .tips-form {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="neurobuddy-container">
+    <h2 class="neurobuddy-header">
+        <i class="fas fa-robot"></i>
+        Talk to NeuroBuddy
+    </h2>
+
+    <!-- Chat Form -->
+    <form method="post" class="chat-form">
+        {% csrf_token %}
+        <input type="text" name="user_input" placeholder="Ask NeuroBuddy anything about mental wellness..." required>
+        <button type="submit">
+            <i class="fas fa-comment-dots"></i> Chat
+        </button>
+    </form>
+
+    {% if response %}
+    <div class="response-container">
+        <h3 class="response-header">
+            <i class="fas fa-robot"></i>
+            NeuroBuddy Says:
+        </h3>
+        <div class="response-content">
+            {{ response|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Tips Form -->
+    <form method="post" class="tips-form">
+        {% csrf_token %}
+        <input type="text" name="mood" placeholder="How are you feeling today? (e.g., anxious, happy, stressed)" required>
+        <button type="submit">
+            <i class="fas fa-lightbulb"></i> Get Smart Tips
+        </button>
+    </form>
+
+    {% if tips %}
+    <div class="tips-response-container">
+        <h3 class="tips-header">
+            <i class="fas fa-brain"></i>
+            Smart To-Do Tips:
+        </h3>
+        <div class="tips-content">
+            {{ tips|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Add interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        // Focus on first input when page loads
+        document.querySelector('input[name="user_input"]')?.focus();
+        
+        // Smooth scroll to responses when they appear
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.classList.contains('response-container')) {
+                            node.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                }
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+</script>
+{% endblock %}

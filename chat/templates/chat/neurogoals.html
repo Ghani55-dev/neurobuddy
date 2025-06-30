@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* NeuroGoals Container */
+    .neurogoals-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .dark-theme .neurogoals-container {
+        background: #1e1e1e;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Header Styles */
+    .neurogoals-header {
+        color: #6a11cb;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+    .dark-theme .neurogoals-header {
+        color: #8a2be2;
+    }
+
+    .neurogoals-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        border-radius: 2px;
+    }
+
+    /* Goal Form Styles */
+    .goal-form {
+        margin-bottom: 3rem;
+        background: rgba(106, 17, 203, 0.05);
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    .dark-theme .goal-form {
+        background: rgba(138, 43, 226, 0.08);
+    }
+
+    .goal-form p {
+        margin-bottom: 1.5rem;
+    }
+
+    .goal-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #6a11cb;
+    }
+
+    .dark-theme .goal-form label {
+        color: #8a2be2;
+    }
+
+    .goal-form input,
+    .goal-form textarea,
+    .goal-form select {
+        width: 100%;
+        padding: 0.85rem 1.25rem;
+        border: 1px solid rgba(106, 17, 203, 0.3);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .dark-theme .goal-form input,
+    .dark-theme .goal-form textarea,
+    .dark-theme .goal-form select {
+        background: #1e1e1e;
+        border-color: rgba(138, 43, 226, 0.4);
+        color: white;
+    }
+
+    .goal-form input:focus,
+    .goal-form textarea:focus,
+    .goal-form select:focus {
+        outline: none;
+        border-color: #6a11cb;
+        box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+    }
+
+    .goal-form button {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .goal-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+    }
+
+    /* Goal List Styles */
+    .goal-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .goal-list h3 {
+        color: #6a11cb;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dark-theme .goal-list h3 {
+        color: #8a2be2;
+    }
+
+    .goal-list li {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        background: rgba(106, 17, 203, 0.03);
+        border-radius: 12px;
+        border-left: 4px solid #6a11cb;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dark-theme .goal-list li {
+        background: rgba(138, 43, 226, 0.08);
+        border-left-color: #8a2be2;
+    }
+
+    .goal-list li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.1);
+    }
+
+    .goal-list li strong {
+        flex: 1;
+        min-width: 200px;
+        color: #2c3e50;
+    }
+
+    .dark-theme .goal-list li strong {
+        color: #f8f9fa;
+    }
+
+    .goal-list li span {
+        color: #7f8c8d;
+    }
+
+    .dark-theme .goal-list li span {
+        color: #b0b0b0;
+    }
+
+    .goal-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-completed {
+        background: rgba(46, 204, 113, 0.15);
+        color: #2ecc71;
+    }
+
+    .status-pending {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+    }
+
+    .empty-goals {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+        font-style: italic;
+        background: rgba(106, 17, 203, 0.03);
+        border-radius: 12px;
+    }
+
+    .dark-theme .empty-goals {
+        color: #b0b0b0;
+        background: rgba(138, 43, 226, 0.08);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .goal-list li {
+        animation: fadeIn 0.4s ease-out forwards;
+        animation-delay: calc(var(--i) * 0.1s);
+        opacity: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .neurogoals-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .goal-list li {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+    }
+</style>
+
+<div class="neurogoals-container">
+    <h2 class="neurogoals-header"><i class="fas fa-brain me-2"></i>NeuroGoals – Set Your Wellness Goals</h2>
+
+    <form method="POST" class="goal-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"><i class="fas fa-plus-circle me-2"></i>Set Goal</button>
+    </form>
+
+    <div class="goal-list">
+        <h3><i class="fas fa-bullseye me-2"></i>Your Goals</h3>
+        
+        {% for goal in goals %}
+            <li style="--i: {{ forloop.counter0 }};">
+                <strong>{{ goal.goal_text }}</strong>
+                <span>(Target: {{ goal.target_date|date:"M d, Y" }})</span>
+                <span class="goal-status {% if goal.is_completed %}status-completed{% else %}status-pending{% endif %}">
+                    {% if goal.is_completed %}
+                        <i class="fas fa-check-circle me-1"></i>Completed
+                    {% else %}
+                        <i class="fas fa-clock me-1"></i>Pending
+                    {% endif %}
+                </span>
+            </li>
+        {% empty %}
+            <li class="empty-goals">
+                <i class="fas fa-rocket fa-2x mb-3" style="color: #6a11cb;"></i>
+                <p>No goals yet. Start by setting your first one!</p>
+            </li>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // Add interactivity to goal status toggles
+    document.querySelectorAll('.goal-status').forEach(status => {
+        status.addEventListener('click', function(e) {
+            // In a real implementation, this would toggle the goal status
+            if (this.classList.contains('status-pending')) {
+                this.classList.remove('status-pending');
+                this.classList.add('status-completed');
+                this.innerHTML = '<i class="fas fa-check-circle me-1"></i>Completed';
+            } else {
+                this.classList.remove('status-completed');
+                this.classList.add('status-pending');
+                this.innerHTML = '<i class="fas fa-clock me-1"></i>Pending';
+            }
+        });
+    });
+</script>
+{% endblock %}
