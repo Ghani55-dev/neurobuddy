@@ -6,7 +6,7 @@ import os
 import json
 
 # Use environment variable or fallback to default (not recommended for production)
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyASKsQM1XwBhgzJQehhk9__Rs2O5VAmC9Y')
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
 @csrf_exempt
@@ -16,7 +16,7 @@ def chatbot(request):
             body = json.loads(request.body)
             user_message = body.get("message", "")
 
-            model = genai.GenerativeModel('gemini-1.5-flash')  # Use the correct model name
+            model = genai.GenerativeModel('gemini-2.5-flash-lite-preview-06-17')  # Use the correct model name
             chat = model.start_chat(history=[])
             response = chat.send_message(user_message)
 
