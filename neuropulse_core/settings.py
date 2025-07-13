@@ -102,6 +102,11 @@ DATABASES = {
         'USER': 'neurobuddy_db_user',
         'PASSWORD': 'oFUwHkIlrdJDmKigedj3Ias4vQ3GBIwF',
         'HOST': 'dpg-d1pvlt3uibrs73e71270-a',
+
+        'NAME': 'neurobuddy_db',
+        'USER': 'postgres',
+        'PASSWORD': '89789',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
