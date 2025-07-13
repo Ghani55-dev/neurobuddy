@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entertainment Videos | NeuroPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .video-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1>NeuroPulse Entertainment</h1>
+            <p class="lead">Your personalized video collection</p>
+        </div>
+        <div class="row" id="video-container">
+        {% include 'entertainment/partials/video_card.html' %}
+    </div>
+
+    <div id="load-more-trigger" class="text-center my-4">
+        <span class="text-muted">Loading more videos...</span>
+    </div>
+        
+        <!-- Simple Pagination (without partial) -->
+        {% if is_paginated %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let page = 2;
+  let loading = false;
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !loading) {
+      loadMoreVideos();
+    }
+  }, {
+    root: null,
+    threshold: 0.5,
+  });
+
+  const trigger = document.querySelector('#load-more-trigger');
+  if (trigger) observer.observe(trigger);
+
+  function loadMoreVideos() {
+    loading = true;
+    fetch(`?page=${page}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('video-container');
+      container.insertAdjacentHTML('beforeend', data.html);
+      page += 1;
+      loading = false;
+
+      if (!data.has_more || data.html.trim() === '') {
+        observer.disconnect();
+        trigger.innerText = 'No more videos.';
+      }
+    })
+    .catch(error => {
+      console.error('Error loading videos:', error);
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    const likeBtn = e.target.closest('.like-btn');
+    if (likeBtn) {
+      const videoId = likeBtn.dataset.videoId;
+      fetch("{% url 'entertainment:like_video' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `video_id=${videoId}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        likeBtn.querySelector('.like-count').innerText = data.like_count;
+        likeBtn.classList.toggle('btn-danger', data.liked);
+        likeBtn.classList.toggle('btn-outline-danger', !data.liked);
+      });
+    }
+
+    const shareBtn = e.target.closest('.share-btn');
+    if (shareBtn) {
+      const url = window.location.origin + shareBtn.dataset.url;
+      navigator.clipboard.writeText(url)
+        .then(() => alert("Video link copied to clipboard!"))
+        .catch(() => alert("Failed to copy link."));
+    }
+  });
+</script>
+
+</body>
+</html>

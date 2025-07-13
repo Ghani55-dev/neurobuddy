@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Create New Playlist</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Playlist</button>
+    </form>
+</div>
+{% endblock %}
+
+<!-- playlist_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ playlist.title }}</h2>
+    <p>{{ playlist.description }}</p>
+    
+    <div class="row">
+        {% for item in playlist.playlistvideo_set.all %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <a href="{% url 'video_detail' item.video.id %}">
+                    <img src="{{ item.video.thumbnail.url }}" class="card-img-top">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.video.title }}</h5>
+                    <form method="post" action="{% url 'remove_from_playlist' playlist.id item.video.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+<!-- Add to video_detail.html -->
+<div class="playlist-actions mt-3">
+    <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#addToPlaylistModal">
+        <i class="fas fa-plus"></i> Add to Playlist
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addToPlaylistModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add to Playlist</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'add_to_playlist' video.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Select Playlist</label>
+                        <select name="playlist_id" class="form-control">
+                            {% for playlist in request.user.playlist_set.all %}
+                            <option value="{{ playlist.id }}">{{ playlist.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ import json
 from django.utils import timezone
 from datetime import timedelta
 from django.db import transaction
+from entertainment.models import EntertainmentVideo 
 
 @login_required(login_url='auth_required')
 def dashboard_view(request):
@@ -45,6 +46,7 @@ def dashboard_view(request):
     
     feedbacks = SuggestionFeedback.objects.filter(user=user)
     liked_suggestion_ids = feedbacks.filter(liked=True).values_list('suggestion_id', flat=True)
+    featured_videos = EntertainmentVideo.objects.order_by('-upload_date')[:5]
     
     # Check if streak should be reset (missed a day)
     today = timezone.localdate()
@@ -78,7 +80,8 @@ def dashboard_view(request):
         "welcome_message": welcome_message,
         'liked_suggestion_ids': liked_suggestion_ids,
         'current_streak': current_streak,
-        'streak_message': get_streak_message(current_streak)
+        'streak_message': get_streak_message(current_streak),
+        'featured_videos': featured_videos,
     }
 
     return render(request, "dashboard/dashboard.html", context)

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .video-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+  }
+  .video-item {
+    height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<div class="video-container">
+  {% for video in videos %}
+    <div class="video-item">
+      <video autoplay muted loop controls preload="auto" playsinline>
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div style="position:absolute; bottom:20px; left:20px; color:white;">
+        <h4>{{ video.title }}</h4>
+        <p>{{ video.description }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  // Pause all videos except current in view
+  const videos = document.querySelectorAll('video');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.play();
+      } else {
+        entry.target.pause();
+      }
+    });
+  }, { threshold: 0.7 });
+
+  videos.forEach(video => observer.observe(video));
+</script>
+{% endblock %}

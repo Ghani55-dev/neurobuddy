@@ -721,6 +721,15 @@ document.addEventListener("DOMContentLoaded", function () {
     🔄 Refresh Suggestion
   </button>
 </form>
+<div class="card text-center p-4 mt-4 shadow rounded bg-dark text-white">
+    <h4>🎬 Entertainment Zone</h4>
+    <p>Watch and share fun videos!</p>
+    
+    <a href="{% url 'entertainment:video_list' %}" class="btn btn-primary m-2">Browse Videos</a>
+    <a href="{% url 'entertainment:upload_video' %}" class="btn btn-success m-2">Upload Video</a>
+    <a href="{% url 'entertainment:watch_history' %}" class="btn btn-outline-light m-2">See Your Uploads</a>
+</div>
+
 <canvas id="wearableChart" width="400" height="100"></canvas>
 
 <script>
