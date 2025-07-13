@@ -98,17 +98,15 @@ WSGI_APPLICATION = 'neuropulse_core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-<<<<<<< HEAD
         'NAME': 'neurobuddy-db',
         'USER': 'neurobuddy_db_user',
         'PASSWORD': 'oFUwHkIlrdJDmKigedj3Ias4vQ3GBIwF',
         'HOST': 'dpg-d1pvlt3uibrs73e71270-a',
-=======
+
         'NAME': 'neurobuddy_db',
         'USER': 'postgres',
         'PASSWORD': '89789',
         'HOST': 'localhost',
->>>>>>> 53ecb613 (Initial deploy: PostgreSQL Render DB integration)
         'PORT': '5432',
     }
 }
