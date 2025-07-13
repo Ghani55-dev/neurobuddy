@@ -98,19 +98,24 @@ WSGI_APPLICATION = 'neuropulse_core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neurobuddy-db',
-        'USER': 'neurobuddy_db_user',
-        'PASSWORD': 'oFUwHkIlrdJDmKigedj3Ias4vQ3GBIwF',
-        'HOST': 'dpg-d1pvlt3uibrs73e71270-a',
-
-        'NAME': 'neurobuddy_db',
-        'USER': 'postgres',
-        'PASSWORD': '89789',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
