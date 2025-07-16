@@ -175,13 +175,29 @@
 {% for video in videos %}
 <div class="col-md-4 mb-4">
     <div class="card h-100 shadow-sm video-card">
-        {% if video.thumbnail %}
-        <img src="{{ video.thumbnail.url }}" class="card-img-top" alt="{{ video.title }}">
-        {% else %}
-        <div class="no-thumbnail">
-            <span>No Thumbnail Available</span>
-        </div>
-        {% endif %}
+{% if video.video_url %}
+  <video
+    class="card-img-top"
+    src="{{ video.video_url }}"
+    preload="metadata"
+    muted
+    loop
+    playsinline
+    onmouseover="this.play()"
+    onmouseout="this.pause(); this.currentTime = 0;"
+    poster="{% if video.thumbnail %}{{ video.thumbnail.url }}{% endif %}"
+    style="height: 180px; object-fit: cover;"
+  ></video>
+{% else %}
+  {% if video.thumbnail %}
+    <img src="{{ video.thumbnail.url }}" class="card-img-top" alt="{{ video.title }}">
+  {% else %}
+    <div class="no-thumbnail">
+      <span>No Video Available</span>
+    </div>
+  {% endif %}
+{% endif %}
+
 
         <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ video.title }}</h5>

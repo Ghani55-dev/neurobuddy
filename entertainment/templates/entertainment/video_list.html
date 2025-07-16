@@ -136,6 +136,19 @@
         .catch(() => alert("Failed to copy link."));
     }
   });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.reel-video').forEach(video => {
+      video.addEventListener('mouseenter', () => {
+        video.play();
+        video.muted = true;
+      });
+      video.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  });
 </script>
 
 </body>

@@ -636,7 +636,8 @@
         {% if type == "video" and suggestion.video_url %}
           <div class="ratio ratio-16x9 mb-2" style="max-width: 400px;">
             <iframe width="320" height="180" src="{{ suggestion.video_url }}" allowfullscreen frameborder="0"></iframe>
-          </div>
+            
+          </div><i>⚠️ video is Not unavailable. click on youtube icon</i>
         {% else %}
           <p class="{% if type == 'quote' %}fst-italic{% endif %} mb-2">{{ suggestion.content }}</p>
         {% endif %}
@@ -730,13 +731,22 @@ document.addEventListener("DOMContentLoaded", function () {
     <a href="{% url 'entertainment:watch_history' %}" class="btn btn-outline-light m-2">See Your Uploads</a>
 </div>
 
-<canvas id="wearableChart" width="400" height="100"></canvas>
+<div class="chart-container" style="position: relative; height:60vh; width:100%; margin: 1rem 0;">
+  <canvas id="wearableChart"></canvas>
+</div>
 
 <script>
+ document.addEventListener('DOMContentLoaded', function() {
   fetch('/wearable/chart-data/')
     .then(res => res.json())
     .then(data => {
       const ctx = document.getElementById('wearableChart').getContext('2d');
+      
+      // Mobile-specific adjustments
+      const isMobile = window.innerWidth <= 768;
+      const fontSize = isMobile ? 10 : 12;
+      const pointRadius = isMobile ? 2 : 3;
+      
       new Chart(ctx, {
         type: 'line',
         data: {
@@ -745,31 +755,110 @@ document.addEventListener("DOMContentLoaded", function () {
             {
               label: 'Heart Rate',
               data: data.heart_rates,
-              borderColor: 'red',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderWidth: 2,
+              tension: 0.3,
+              pointRadius: pointRadius,
               fill: false,
             },
             {
               label: 'Steps',
               data: data.steps,
-              borderColor: 'blue',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderWidth: 2,
+              tension: 0.3,
+              pointRadius: pointRadius,
               fill: false,
             },
             {
               label: 'Sleep (hrs)',
               data: data.sleep_hours,
-              borderColor: 'green',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 2,
+              tension: 0.3,
+              pointRadius: pointRadius,
               fill: false,
             }
           ]
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: isMobile ? 'bottom' : 'top',
+              labels: {
+                font: {
+                  size: fontSize
+                },
+                boxWidth: 12,
+                padding: isMobile ? 10 : 15,
+                usePointStyle: true,
+              }
+            },
+            tooltip: {
+              enabled: !isMobile,
+              intersect: false,
+              mode: 'index',
+              bodyFont: {
+                size: fontSize
+              },
+              titleFont: {
+                size: fontSize + 1
+              }
+            }
+          },
+          interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false
+          },
           scales: {
-            y: { beginAtZero: true }
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                maxRotation: isMobile ? 45 : 0,
+                font: {
+                  size: fontSize - 1
+                }
+              }
+            },
+            y: { 
+              beginAtZero: true,
+              ticks: {
+                font: {
+                  size: fontSize - 1
+                }
+              }
+            }
           }
         }
       });
+    })
+    .catch(error => {
+      console.error('Error loading chart data:', error);
+      document.querySelector('.chart-container').innerHTML = `
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Could not load wearable data. Please try again later.
+        </div>
+      `;
     });
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+  const chart = Chart.getChart("wearableChart");
+  if (chart) {
+    chart.resize();
+  }
+});
+
 </script>
 
 {% endblock %}
