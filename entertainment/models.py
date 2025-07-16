@@ -43,10 +43,9 @@ class EntertainmentVideo(models.Model):
             raise ValidationError("A video file is required")
         
         # Validate file extension
-        ext = os.path.splitext(self.video_file.name)[1]
-        valid_extensions = ['.mp4', '.mov', '.avi', '.mkv']
-        if not ext.lower() in valid_extensions:
-            raise ValidationError('Unsupported file extension')
+        ext = self.video_file.name.split('.')[-1].lower()
+        if ext not in ['mp4', 'mov', 'avi', 'mkv']:
+            raise ValidationError("Unsupported video format.")
 
     def save(self, *args, **kwargs):
         self.full_clean()  # validate before saving
