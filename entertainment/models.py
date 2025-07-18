@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.core.files import File
 from PIL import Image
-
+from cloudinary.models import CloudinaryField
 STATUS_CHOICES = (
     ('pending', 'Pending'),
     ('approved', 'Approved'),
@@ -19,8 +19,8 @@ STATUS_CHOICES = (
 class EntertainmentVideo(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    video_file = models.FileField(upload_to='entertainment_videos/', max_length=255)
-    thumbnail = models.ImageField(upload_to='video_thumbnails/', blank=True)
+    video_file = CloudinaryField('video', resource_type='video')
+    thumbnail = CloudinaryField('image', blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=50, default='General')  # e.g., "funny", "inspirational", "relaxing"
     duration = models.IntegerField(default=60)  # in seconds
