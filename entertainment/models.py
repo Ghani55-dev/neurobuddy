@@ -51,13 +51,13 @@ class EntertainmentVideo(models.Model):
         self.full_clean()  # validate before saving
         super().save(*args, **kwargs)
 
-        try:
-            if self.video_file and self.video_file.path and os.path.exists(self.video_file.path):
-                if not self.thumbnail:
-                    generate_thumbnail(self)
-                compress_video(self)
-        except Exception as e:
-            print(f"Error during video processing: {e}")
+        # try:
+        #     if self.video_file and self.video_file.path and os.path.exists(self.video_file.path):
+        #         if not self.thumbnail:
+        #             generate_thumbnail(self)
+        #         compress_video(self)
+        # except Exception as e:
+        #     print(f"Error during video processing: {e}")
 
     def __str__(self):
         return self.title
