@@ -190,12 +190,13 @@
   ></video>
 {% else %}
   {% if video.thumbnail %}
-    <img src="{{ video.thumbnail.url }}" class="card-img-top" alt="{{ video.title }}">
-  {% else %}
-    <div class="no-thumbnail">
-      <span>No Video Available</span>
-    </div>
-  {% endif %}
+  <img src="{{ video.thumbnail.url }}" class="card-img-top" alt="{{ video.title }}">
+{% else %}
+  <video src="{{ video.video_file.url }}" class="card-img-top" muted loop playsinline
+         onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"
+         style="height: 180px; object-fit: cover;"></video>
+{% endif %}
+
 {% endif %}
 
 

@@ -11,6 +11,11 @@ from django.conf import settings
 from django.core.files import File
 from PIL import Image
 from cloudinary.models import CloudinaryField
+import requests
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files.base import ContentFile
+from cloudinary import uploader
+
 STATUS_CHOICES = (
     ('pending', 'Pending'),
     ('approved', 'Approved'),
@@ -19,8 +24,8 @@ STATUS_CHOICES = (
 class EntertainmentVideo(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    video_file = CloudinaryField('video', resource_type='video')
-    thumbnail = CloudinaryField('image', blank=True, null=True)
+    video_file = CloudinaryField('video', resource_type='video', allowed_formats=['mp4', 'mov', 'avi', 'mkv'])
+    thumbnail = models.ImageField(upload_to='video_thumbnails/', blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=50, default='General')  # e.g., "funny", "inspirational", "relaxing"
     duration = models.IntegerField(default=60)  # in seconds
@@ -38,18 +43,53 @@ class EntertainmentVideo(models.Model):
         return reverse('shared_video', args=[str(self.share_token)])
     
     def clean(self):
-        """Validate that video_file exists before saving"""
         if not self.video_file:
-            raise ValidationError("A video file is required")
-        
-        # Validate file extension
-        ext = self.video_file.name.split('.')[-1].lower()
-        if ext not in ['mp4', 'mov', 'avi', 'mkv']:
-            raise ValidationError("Unsupported video format.")
+            raise ValidationError("A video file is required.")
+
+        valid_extensions = ['.mp4', '.mov', '.avi', '.mkv']
+
+    # Try to get the file name safely
+        file_name = getattr(self.video_file, 'name', None)
+
+        if file_name:
+            ext = os.path.splitext(file_name)[1].lower()
+            if ext not in valid_extensions:
+                raise ValidationError("Unsupported video file extension.")
+        else:
+        # fallback: Cloudinary? check public_id or URL
+            file_url = getattr(self.video_file, 'url', '')
+            ext = os.path.splitext(file_url)[1].lower()
+            if ext not in valid_extensions:
+                raise ValidationError("Unsupported video file format.")
+
 
     def save(self, *args, **kwargs):
-        self.full_clean()  # validate before saving
-        super().save(*args, **kwargs)
+        self.full_clean()
+        super().save(*args, **kwargs)  # Save video first
+
+    # Skip if thumbnail already exists
+        if self.thumbnail or not self.video_file:
+            return
+
+        try:
+        # Only proceed if Cloudinary URL is detected
+            if "res.cloudinary.com" in self.video_file.url:
+                # Generate Cloudinary thumbnail URL (frame from 2 seconds)
+                cloudinary_thumb_url = self.video_file.url.replace('/upload/', '/upload/so_2/')\
+                                                      .replace('.mp4', '.jpg')
+
+                # Download the image
+                response = requests.get(cloudinary_thumb_url)
+                if response.status_code == 200:
+                    file_name = f"{uuid.uuid4().hex}.jpg"
+                    self.thumbnail.save(file_name, ContentFile(response.content), save=False)
+                    super().save(update_fields=["thumbnail"])
+                else:
+                    print("Cloudinary thumbnail not fetched properly")
+
+        except Exception as e:
+            print(f"[Thumbnail Error]: {str(e)}")
+
 
         # try:
         #     if self.video_file and self.video_file.path and os.path.exists(self.video_file.path):
