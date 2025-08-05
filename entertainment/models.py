@@ -15,7 +15,9 @@ import requests
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files.base import ContentFile
 from cloudinary import uploader
-
+import cloudinary
+from cloudinary.uploader import upload as cloudinary_upload
+from cloudinary import config as cloudinary_config
 STATUS_CHOICES = (
     ('pending', 'Pending'),
     ('approved', 'Approved'),
@@ -25,7 +27,7 @@ class EntertainmentVideo(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     video_file = CloudinaryField('video', resource_type='video', allowed_formats=['mp4', 'mov', 'avi', 'mkv'])
-    thumbnail = models.ImageField(upload_to='video_thumbnails/', blank=True, null=True)
+    thumbnail = CloudinaryField('image', blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=50, default='General')  # e.g., "funny", "inspirational", "relaxing"
     duration = models.IntegerField(default=60)  # in seconds
@@ -65,28 +67,37 @@ class EntertainmentVideo(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super().save(*args, **kwargs)  # Save video first
+        super().save(*args, **kwargs)  # First, save the video
 
-    # Skip if thumbnail already exists
+    # Skip thumbnail generation if already exists or no video file
         if self.thumbnail or not self.video_file:
-            return
+           return
 
         try:
-        # Only proceed if Cloudinary URL is detected
-            if "res.cloudinary.com" in self.video_file.url:
-                # Generate Cloudinary thumbnail URL (frame from 2 seconds)
-                cloudinary_thumb_url = self.video_file.url.replace('/upload/', '/upload/so_2/')\
-                                                      .replace('.mp4', '.jpg')
+        # Extract public_id from the Cloudinary video
+            public_id = self.video_file.public_id
+            cloud_name = cloudinary_config().cloud_name
 
-                # Download the image
-                response = requests.get(cloudinary_thumb_url)
-                if response.status_code == 200:
-                    file_name = f"{uuid.uuid4().hex}.jpg"
-                    self.thumbnail.save(file_name, ContentFile(response.content), save=False)
-                    super().save(update_fields=["thumbnail"])
-                else:
-                    print("Cloudinary thumbnail not fetched properly")
+        # Generate frame URL from second 2
+            frame_url = f"https://res.cloudinary.com/{cloud_name}/video/upload/so_2/{public_id}.jpg"
+            print(f"[Thumbnail Fetch URL]: {frame_url}")
 
+        # Download thumbnail image from video frame
+            response = requests.get(frame_url)
+            if response.status_code == 200:
+            # Upload the image to Cloudinary (resource_type must be 'image')
+                result = cloudinary_upload(
+                   response.content,
+                   resource_type='image',
+                   folder='video_thumbnails',
+                   public_id=f"{public_id}_thumb"
+                )
+            # Set the CloudinaryField URL
+                self.thumbnail = result['public_id']
+                super().save(update_fields=['thumbnail'])
+                print("[Thumbnail Uploaded and Saved]")
+            else:
+                print(f"[Thumbnail Fetch Failed] Status: {response.status_code}")
         except Exception as e:
             print(f"[Thumbnail Error]: {str(e)}")
 

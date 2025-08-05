@@ -1,13 +1,19 @@
 from django.contrib import admin
 from .models import EntertainmentVideo, VideoComment, Playlist
-
+from django.utils.html import format_html
 @admin.register(EntertainmentVideo)
 class EntertainmentVideoAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'upload_date', 'views', 'like_count', 'status')
     list_filter = ('category', 'upload_date', 'status')
     search_fields = ('title', 'description')
     actions = ['approve_selected', 'reject_selected']
-
+    
+    def thumbnail_preview(self, obj):
+        if obj.thumbnail:
+            return format_html('<img src="{}" style="height: 60px;" />', obj.thumbnail.url)
+        return "-"
+    thumbnail_preview.short_description = 'Thumbnail'
+    
     def like_count(self, obj):
         return obj.likes.count()
     like_count.short_description = 'Likes'
@@ -30,3 +36,5 @@ class VideoCommentAdmin(admin.ModelAdmin):
     
 admin.site.register(Playlist)
 
+
+    

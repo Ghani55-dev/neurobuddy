@@ -1,25 +1,58 @@
 {% extends 'base.html' %}
+<style>
+    .hover-shadow:hover {
+        transform: scale(1.02);
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    video {
+        object-fit: cover;
+        width: 100%;
+        height: auto;
+    }
+
+    .card-body {
+        padding: 1rem 1.25rem;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .transition {
+        transition: transform 0.3s ease-in-out;
+    }
+</style>
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Your Uploaded Videos</h2>
-    <div class="row">
+<div class="container py-5">
+    <h2 class="mb-4 text-center fw-bold text-primary">🎥 Your Uploaded Videos</h2>
+
+    {% if videos %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {% for video in videos %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    <video class="card-img-top" controls  >
+        <div class="col">
+            <div class="card h-100 border-0 shadow-lg hover-shadow transition">
+                <div class="ratio ratio-16x9">
+                    <video class="rounded-top" controls preload="metadata">
                         <source src="{{ video.video_file.url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ video.title }}</h5>
-                        <p class="card-text">{{ video.description }}</p>
-                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-dark fw-semibold">{{ video.title }}</h5>
+                    <p class="card-text text-muted small">{{ video.description|truncatewords:25 }}</p>
                 </div>
             </div>
-        {% empty %}
-            <p class="text-muted">You haven't uploaded any videos yet.</p>
+        </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="text-center mt-5">
+        <p class="text-muted fs-5">You haven't uploaded any videos yet.</p>
+        <a href="{% url 'upload_video' %}" class="btn btn-outline-primary mt-3">Upload Your First Video</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

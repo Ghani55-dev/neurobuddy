@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*b1*jwtqecv_%ri41kbh8binof#-n=!w)5v876qn1+!ywfo*%!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'neurobuddy.onrender.com']
 
 
@@ -221,12 +221,12 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
+cloudinary.config( 
+  cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'], 
+  api_key = CLOUDINARY_STORAGE['API_KEY'], 
+  api_secret = CLOUDINARY_STORAGE['API_SECRET']
+)
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-# cloudinary.config( 
-#   cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'], 
-#   api_key = CLOUDINARY_STORAGE['API_KEY'], 
-#   api_secret = CLOUDINARY_STORAGE['API_SECRET']
-# )
 
 CORS_ALLOW_ALL_ORIGINS = True
 
