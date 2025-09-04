@@ -2,16 +2,15 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 from django.shortcuts import render
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import WellnessGoalForm
 from .models import WellnessGoal
 from django.contrib.auth.decorators import login_required
-
 from .models import Goal, GoalProgress
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-
+from django.views.decorators.csrf import csrf_exempt
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -101,3 +100,12 @@ def toggle_goal_completion(request, progress_id):
     progress.completed = not progress.completed
     progress.save()
     return JsonResponse({'status': 'ok', 'completed': progress.completed})
+
+
+
+def delete_goal(request, goal_id):
+    if request.method == "POST":
+        goal = get_object_or_404(Goal, id=goal_id)
+        goal.delete()
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)

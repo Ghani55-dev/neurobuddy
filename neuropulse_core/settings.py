@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'corsheaders',
+     "widget_tweaks",
 ]
 SITE_ID = 1
 

@@ -36,7 +36,7 @@ class MoodEntryForm(forms.ModelForm):
         self.fields['mood_score'].label = "How are you feeling?"
         self.fields['note'].label = "Additional Notes"
         self.fields['sentiment'].label = "Emotional State"
-        self.fields['ai_insight'].label = "AI Insight (Gemini)"  # 👈 Label it
-        self.fields['mood_score'].help_text = "Select a value from 1 (worst) to 10 (best)"
+        self.fields['ai_insight'].label = "AI Insight (Ghani)"  # 👈 Label it
+        self.fields['mood_score'].help_text = "Select a value from 1 (worst) to 5 (best)"
         self.fields['sentiment'].help_text = "Describe your current emotions in detail"
         self.fields['ai_insight'].required = False

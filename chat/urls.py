@@ -7,6 +7,7 @@ urlpatterns = [
     path('goals/', neurogoals_view, name='neurogoals'),
     path('suggest-goals/', suggest_goals, name='suggest_goals'),
     path('goal/toggle/<int:progress_id>/', toggle_goal_completion, name='toggle_goal_completion'),
+    path('goal/delete/<int:goal_id>/', views.delete_goal, name='delete_goal'),
 
 
 ]

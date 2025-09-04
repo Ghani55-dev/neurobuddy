@@ -265,14 +265,20 @@
             </table>
         </div>
         
-        <div class="table-actions">
-            <div>
-                Showing {{ moods|length }} entr{{ moods|pluralize:"y,ies" }}
-            </div>
-            <button class="export-btn">
-                <i class="fas fa-download"></i> Export Data
-            </button>
+       <div class="table-actions">
+    <div>
+        Showing {{ moods|length }} entr{{ moods|pluralize:"y,ies" }}
+    </div>
+    <div style="position: relative;">
+        <button class="export-btn" id="exportBtn">
+            <i class="fas fa-download"></i> Export Data
+        </button>
+        <div id="exportMenu" style="display: none; position: absolute; right: 0; top: 110%; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+            <button class="export-option" data-type="csv" style="padding: 0.5rem 1rem; border: none; background: none; width: 100%; text-align: left; cursor: pointer;">📄 Export as CSV</button>
+            <button class="export-option" data-type="pdf" style="padding: 0.5rem 1rem; border: none; background: none; width: 100%; text-align: left; cursor: pointer;">📑 Export as PDF</button>
         </div>
+    </div>
+</div>
     {% else %}
         <div class="no-entries">
             <i class="fas fa-calendar-plus fa-3x mb-3" style="color: #6a11cb;"></i>
@@ -285,25 +291,80 @@
     {% endif %}
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Add hover effects to table rows
+        // Hover effects
         const rows = document.querySelectorAll('.mood-table tbody tr');
         rows.forEach(row => {
-            row.addEventListener('mouseenter', function() {
-                this.style.backgroundColor = 'rgba(106, 17, 203, 0.03)';
+            row.addEventListener('mouseenter', () => row.style.backgroundColor = 'rgba(106, 17, 203, 0.03)');
+            row.addEventListener('mouseleave', () => row.style.backgroundColor = '');
+        });
+
+        // CSV Export
+        function exportTableToCSV(filename) {
+            const rows = document.querySelectorAll("table.mood-table tr");
+            let csv = [];
+
+            rows.forEach(row => {
+                let cols = row.querySelectorAll("td, th");
+                let rowData = [];
+                cols.forEach(col => {
+                    let text = col.innerText.replace(/"/g, '""');
+                    rowData.push(`"${text}"`);
+                });
+                csv.push(rowData.join(","));
             });
-            row.addEventListener('mouseleave', function() {
-                this.style.backgroundColor = '';
+
+            const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.click();
+        }
+
+        // PDF Export
+        function exportTableToPDF(filename) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Mood History", 14, 15);
+            doc.autoTable({
+                startY: 20,
+                html: '.mood-table',
+                theme: 'striped',
+                styles: { fontSize: 10 }
+            });
+
+            doc.save(filename);
+        }
+
+        // Dropdown toggle
+        const exportBtn = document.getElementById('exportBtn');
+        const exportMenu = document.getElementById('exportMenu');
+
+        exportBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exportMenu.style.display = exportMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function() {
+            exportMenu.style.display = 'none';
+        });
+
+        // Export menu options
+        document.querySelectorAll('.export-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                if (type === 'csv') exportTableToCSV("mood_history.csv");
+                else if (type === 'pdf') exportTableToPDF("mood_history.pdf");
+                exportMenu.style.display = 'none';
             });
         });
-        
-        // Export button functionality
-        document.querySelector('.export-btn')?.addEventListener('click', function() {
-            alert('Export functionality would generate a CSV/PDF report here.');
-        });
-        
-        // Tooltip for journal previews
+
+        // Journal preview click
         const journalPreviews = document.querySelectorAll('.journal-preview');
         journalPreviews.forEach(preview => {
             if (preview.textContent.trim() !== '(No journal entry)') {
@@ -315,4 +376,5 @@
         });
     });
 </script>
+
 {% endblock %}

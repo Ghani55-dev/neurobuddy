@@ -64,6 +64,7 @@
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
     }
 
     .dark-theme .goals-container {
@@ -188,8 +189,51 @@
         opacity: 0;
     }
 
-    /* Responsive */
+    .delete-btn {
+        background: #ff4d4d;
+        border: none;
+        color: white;
+        padding: 0.5rem 0.9rem;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .delete-btn:hover {
+        background: #e60000;
+        box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Delete animation */
+    .fade-out {
+        animation: fadeOut 0.4s ease forwards;
+    }
+
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateX(-20px);
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    /* Mobile Responsive Styles */
     @media (max-width: 768px) {
+        .mood-form-container {
+            padding: 1.25rem;
+            margin: 0 0.75rem 1.5rem;
+            border-radius: 10px;
+        }
+        
         .mood-input {
             flex-direction: column;
             gap: 1rem;
@@ -198,16 +242,124 @@
         .mood-input input,
         .mood-input button {
             width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .goals-container {
+            padding: 1.25rem;
+            margin: 0 0.75rem 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .goals-header {
+            margin-bottom: 1.25rem;
+        }
+        
+        .goals-header h2 {
+            font-size: 1.3rem;
         }
         
         .goal-item {
             flex-direction: column;
             align-items: flex-start;
+            padding: 1rem;
+            margin-bottom: 0.9rem;
+            border-left-width: 2px;
+        }
+        
+        .goal-text {
+            margin-right: 0;
+            margin-bottom: 0.75rem;
+            width: 100%;
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
         
         .goal-progress {
+            margin-top: 0.5rem;
+            align-self: stretch;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        
+        .goal-checkbox {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .goal-date {
+            font-size: 0.8rem;
+            margin-right: auto;
+            padding-left: 0.5rem;
+        }
+        
+        .delete-btn {
+            margin-left: 0;
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            order: 2;
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        
+        .no-goals {
+            padding: 1.25rem;
+            font-size: 0.95rem;
+        }
+    }
+
+    /* Small mobile devices */
+    @media (max-width: 480px) {
+        .mood-form-container {
+            padding: 1rem;
+            margin: 0 0.5rem 1.25rem;
+        }
+        
+        .mood-input {
+            gap: 0.85rem;
+        }
+        
+        .mood-input input {
+            padding: 0.8rem 1rem;
+        }
+        
+        .mood-input button {
+            padding: 0.8rem 1rem;
+        }
+        
+        .goals-container {
+            padding: 1rem;
+            margin: 0 0.5rem 1.25rem;
+        }
+        
+        .goals-header h2 {
+            font-size: 1.2rem;
+        }
+        
+        .goal-item {
+            padding: 0.9rem;
+        }
+        
+        .goal-text {
+            font-size: 0.9rem;
+        }
+        
+        .goal-progress {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+        
+        .goal-date {
+            padding-left: 0;
+        }
+        
+        .delete-btn {
             margin-top: 0.75rem;
-            align-self: flex-end;
         }
     }
 </style>
@@ -229,16 +381,22 @@
     
     <ul class="goals-list">
         {% for goal in todays_goals %}
-            <li class="goal-item" style="--i: {{ forloop.counter0 }};">
+            <li class="goal-item" style="--i: {{ forloop.counter0 }};" id="goal-{{ goal.id }}">
                 <div class="goal-text">{{ goal.text }}</div>
                 <div class="goal-progress">
                     {% for p in goal.progress.all %}
                         <input type="checkbox" 
                                class="goal-checkbox" 
-                               data-id="{{ p.id }}" 
+                               data-url="{% url 'toggle_goal_completion' p.id %}" 
                                {% if p.completed %}checked{% endif %}>
                         <span class="goal-date">{{ p.date|date:"M j" }}</span>
                     {% endfor %}
+
+                    <!-- Delete button -->
+                   <button class="delete-btn" data-goal-id="{{ goal.id }}" 
+        data-url="{% url 'delete_goal' goal.id %}">
+    <i class="fas fa-trash-alt"></i> Delete
+</button>
                 </div>
             </li>
         {% empty %}
@@ -248,19 +406,22 @@
 </div>
 
 <script>
+/* Checkbox toggle functionality */
 document.querySelectorAll('.goal-checkbox').forEach(box => {
     box.addEventListener('change', (e) => {
+        const goalItem = box.closest('.goal-item');
+
         // Visual feedback
         if (box.checked) {
-            box.parentElement.parentElement.style.opacity = '0.7';
-            box.parentElement.parentElement.style.textDecoration = 'line-through';
+            goalItem.style.opacity = '0.7';
+            goalItem.style.textDecoration = 'line-through';
         } else {
-            box.parentElement.parentElement.style.opacity = '1';
-            box.parentElement.parentElement.style.textDecoration = 'none';
+            goalItem.style.opacity = '1';
+            goalItem.style.textDecoration = 'none';
         }
-        
-        // Send request
-        fetch(`/goal/toggle/${box.dataset.id}/`, {
+
+        // Use the data-url generated by Django
+        fetch(box.dataset.url, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
@@ -268,7 +429,30 @@ document.querySelectorAll('.goal-checkbox').forEach(box => {
             },
         }).then(response => {
             if (!response.ok) {
-                box.checked = !box.checked; // Revert if failed
+                // Revert if failed
+                box.checked = !box.checked;
+                goalItem.style.opacity = '1';
+                goalItem.style.textDecoration = 'none';
+            }
+        });
+    });
+});
+
+/* Delete functionality */
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const goalItem = document.getElementById(`goal-${this.dataset.goalId}`);
+
+        fetch(this.dataset.url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        }).then(response => {
+            if (response.ok) {
+                goalItem.classList.add('fade-out');
+                setTimeout(() => goalItem.remove(), 400);
             }
         });
     });
