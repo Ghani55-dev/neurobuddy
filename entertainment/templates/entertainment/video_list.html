@@ -5,41 +5,439 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entertainment Videos | NeuroPulse</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-dark: #2c3e50;
+            --text-light: #f8f9fa;
+            --card-dark: rgba(30, 30, 30, 0.8);
+            --card-light: rgba(255, 255, 255, 0.8);
+            --bg-dark: #121212;
+            --bg-light: #f8f9fa;
+            --accent-color: #6a11cb;
+            --accent-secondary: #2575fc;
+        }
+
+        .dark-theme {
+            --glass-bg: rgba(30, 30, 30, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-primary: var(--bg-dark);
+            --text-primary: var(--text-light);
+            --card-bg: var(--card-dark);
+        }
+
+        .light-theme {
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --bg-primary: var(--bg-light);
+            --text-primary: var(--text-dark);
+            --card-bg: var(--card-light);
+        }
+
         body {
-            background-color: #f8f9fa;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.5s ease;
+            min-height: 100vh;
             padding: 20px;
         }
-        .video-card {
-            transition: transform 0.3s;
-            margin-bottom: 20px;
+
+        /* Animated background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
         }
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatParticle 15s infinite linear;
+            opacity: 0.6;
         }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) scale(0); }
+            50% { transform: translateY(50vh) scale(1); }
+            100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(30deg);
+        }
+
+        /* Header styling */
         .header {
-            background-color: #0d6efd;
+            background: var(--primary-gradient);
             color: white;
-            padding: 15px 0;
-            margin-bottom: 30px;
-            border-radius: 5px;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+            background-size: 200% 200%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header .lead {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--text-primary);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(31, 38, 135, 0.25);
+        }
+
+        /* Video card styling */
+        .video-card {
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            height: 100%;
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+            height: 200px;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .video-thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .video-thumbnail::after {
+            opacity: 1;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .play-icon i {
+            color: var(--accent-color);
+            font-size: 20px;
+            margin-left: 4px;
+        }
+
+        .video-card:hover .play-icon {
+            opacity: 1;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .action-btn i {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .like-btn.active {
+            color: #e74c3c;
+        }
+
+        .like-btn.active i {
+            color: #e74c3c;
+        }
+
+        /* Pagination styling */
+        .pagination {
+            margin-top: 2rem;
+        }
+
+        .page-link {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            margin: 0 5px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .page-item.active .page-link {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Loading animation */
+        #load-more-trigger {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 20px;
+        }
+
+        .loading-dots div {
+            position: absolute;
+            top: 0;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+
+        .loading-dots div:nth-child(1) {
+            left: 8px;
+            animation: loading-dots1 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            left: 8px;
+            animation: loading-dots2 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(3) {
+            left: 32px;
+            animation: loading-dots2 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(4) {
+            left: 56px;
+            animation: loading-dots3 0.6s infinite;
+        }
+
+        @keyframes loading-dots1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes loading-dots3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+
+        @keyframes loading-dots2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+
+        /* Content visibility classes */
+        .content-light {
+            display: block;
+        }
+        
+        .dark-theme .content-light {
+            display: none;
+        }
+        
+        .content-dark {
+            display: none;
+        }
+        
+        .dark-theme .content-dark {
+            display: block;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header .lead {
+                font-size: 1rem;
+            }
+            
+            .video-thumbnail {
+                height: 160px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg" id="animated-bg"></div>
+
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon content-light"></i>
+        <i class="fas fa-sun content-dark"></i>
+    </div>
+
     <div class="container">
+        <!-- Header -->
         <div class="header text-center">
             <h1>NeuroPulse Entertainment</h1>
             <p class="lead">Your personalized video collection</p>
         </div>
-        <div class="row" id="video-container">
-        {% include 'entertainment/partials/video_card.html' %}
-    </div>
 
-    <div id="load-more-trigger" class="text-center my-4">
-        <span class="text-muted">Loading more videos...</span>
-    </div>
+        <!-- Video Grid -->
+        <div class="row" id="video-container">
+            {% include 'entertainment/partials/video_card.html' %}
+        </div>
+
+        <!-- Infinite Scroll Trigger -->
+        <div id="load-more-trigger" class="text-center my-4">
+            <div class="loading-dots">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
         
         <!-- Simple Pagination (without partial) -->
         {% if is_paginated %}
@@ -47,7 +445,9 @@
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                        <i class="fas fa-chevron-left me-1"></i> Previous
+                    </a>
                 </li>
                 {% endif %}
                 
@@ -59,7 +459,9 @@
                 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                        Next <i class="fas fa-chevron-right ms-1"></i>
+                    </a>
                 </li>
                 {% endif %}
             </ul>
@@ -68,88 +470,201 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  let page = 2;
-  let loading = false;
-  const observer = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && !loading) {
-      loadMoreVideos();
-    }
-  }, {
-    root: null,
-    threshold: 0.5,
-  });
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
 
-  const trigger = document.querySelector('#load-more-trigger');
-  if (trigger) observer.observe(trigger);
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+        } else {
+            body.classList.add('light-theme');
+        }
 
-  function loadMoreVideos() {
-    loading = true;
-    fetch(`?page=${page}`, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('video-container');
-      container.insertAdjacentHTML('beforeend', data.html);
-      page += 1;
-      loading = false;
+        themeToggle.addEventListener('click', () => {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.replace('dark-theme', 'light-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.replace('light-theme', 'dark-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
 
-      if (!data.has_more || data.html.trim() === '') {
-        observer.disconnect();
-        trigger.innerText = 'No more videos.';
-      }
-    })
-    .catch(error => {
-      console.error('Error loading videos:', error);
-    });
-  }
+        // Create animated background
+        function createAnimatedBackground() {
+            const bg = document.getElementById('animated-bg');
+            
+            // Create particles
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-particle');
+                
+                // Random size and position
+                const size = Math.random() * 30 + 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random color with gradient
+                const colors = [
+                    'radial-gradient(circle, rgba(255,0,102,0.3) 0%, transparent 70%)',
+                    'radial-gradient(circle, rgba(131,56,236,0.3) 0%, transparent 70%)',
+                    'radial-gradient(circle, rgba(0,183,255,0.3) 0%, transparent 70%)',
+                    'radial-gradient(circle, rgba(255,159,0,0.3) 0%, transparent 70%)'
+                ];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random animation duration
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                bg.appendChild(particle);
+            }
+        }
 
-  document.addEventListener('click', function(e) {
-    const likeBtn = e.target.closest('.like-btn');
-    if (likeBtn) {
-      const videoId = likeBtn.dataset.videoId;
-      fetch("{% url 'entertainment:like_video' %}", {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}',
-          'X-Requested-With': 'XMLHttpRequest',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `video_id=${videoId}`
-      })
-      .then(res => res.json())
-      .then(data => {
-        likeBtn.querySelector('.like-count').innerText = data.like_count;
-        likeBtn.classList.toggle('btn-danger', data.liked);
-        likeBtn.classList.toggle('btn-outline-danger', !data.liked);
-      });
-    }
+        // Infinite scroll functionality
+        let page = 2;
+        let loading = false;
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && !loading) {
+                loadMoreVideos();
+            }
+        }, {
+            root: null,
+            threshold: 0.5,
+        });
 
-    const shareBtn = e.target.closest('.share-btn');
-    if (shareBtn) {
-      const url = window.location.origin + shareBtn.dataset.url;
-      navigator.clipboard.writeText(url)
-        .then(() => alert("Video link copied to clipboard!"))
-        .catch(() => alert("Failed to copy link."));
-    }
-  });
+        const trigger = document.querySelector('#load-more-trigger');
+        if (trigger) observer.observe(trigger);
 
-    document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.reel-video').forEach(video => {
-      video.addEventListener('mouseenter', () => {
-        video.play();
-        video.muted = true;
-      });
-      video.addEventListener('mouseleave', () => {
-        video.pause();
-        video.currentTime = 0;
-      });
-    });
-  });
-</script>
+        function loadMoreVideos() {
+            loading = true;
+            fetch(`?page=${page}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('video-container');
+                container.insertAdjacentHTML('beforeend', data.html);
+                page += 1;
+                loading = false;
 
+                // Reinitialize video hover effects for new content
+                initVideoHoverEffects();
+
+                if (!data.has_more || data.html.trim() === '') {
+                    observer.disconnect();
+                    trigger.innerHTML = '<span class="text-muted">No more videos.</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading videos:', error);
+                loading = false;
+            });
+        }
+
+        // Like and share functionality
+        document.addEventListener('click', function(e) {
+            const likeBtn = e.target.closest('.like-btn');
+            if (likeBtn) {
+                e.preventDefault();
+                const videoId = likeBtn.dataset.videoId;
+                
+                // Visual feedback
+                likeBtn.classList.toggle('active');
+                
+                fetch("{% url 'entertainment:like_video' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `video_id=${videoId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.like_count !== undefined) {
+                        likeBtn.querySelector('.like-count').innerText = data.like_count;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    likeBtn.classList.toggle('active'); // Revert on error
+                });
+            }
+
+            const shareBtn = e.target.closest('.share-btn');
+            if (shareBtn) {
+                e.preventDefault();
+                const url = window.location.origin + shareBtn.dataset.url;
+                
+                // Visual feedback
+                const originalHtml = shareBtn.innerHTML;
+                shareBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        setTimeout(() => {
+                            shareBtn.innerHTML = originalHtml;
+                        }, 2000);
+                    })
+                    .catch(() => {
+                        alert("Failed to copy link. Please copy manually: " + url);
+                        shareBtn.innerHTML = originalHtml;
+                    });
+            }
+        });
+
+        // Video hover autoplay functionality
+        function initVideoHoverEffects() {
+            document.querySelectorAll('.reel-video').forEach(video => {
+                // Only add listeners if not already added
+                if (!video.hasAttribute('data-hover-listener')) {
+                    video.setAttribute('data-hover-listener', 'true');
+                    
+                    video.addEventListener('mouseenter', () => {
+                        video.play().catch(e => {
+                            console.log("Autoplay prevented:", e);
+                        });
+                        video.muted = true;
+                    });
+                    
+                    video.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                    
+                    video.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = video.closest('a').href;
+                    });
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createAnimatedBackground();
+            initVideoHoverEffects();
+            
+            // Add hover effects to all glass cards
+            const glassCards = document.querySelectorAll('.glass-card');
+            glassCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

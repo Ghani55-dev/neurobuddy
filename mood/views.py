@@ -21,6 +21,7 @@ from dashboard.ai_utils import get_daily_suggestion
 
 from .utils import get_current_streak, generate_insight_from_note
 from dashboard.ai_utils import generate_and_store_ai_suggestions, get_daily_suggestion
+import statistics
 
 @login_required
 def mood_submit_view(request):
@@ -84,10 +85,78 @@ def mood_chart_view(request):
     labels = [entry.date.strftime('%b %d') for entry in moods]
     mood_scores = [entry.mood_score for entry in moods]
 
-    return render(request, 'mood/mood_chart.html', {
+    # Default values in case of no data
+    average_mood = highest_mood = lowest_mood = 0
+    improvement_text = "Not enough data"
+    insights = [
+        {"text": "No data available. Start tracking your mood to see insights!", "icon": "ℹ️", "category": "neutral"}
+    ]
+
+    if mood_scores:
+        average_mood = round(statistics.mean(mood_scores), 1)
+        highest_mood = max(mood_scores)
+        lowest_mood = min(mood_scores)
+
+        # Weekly change (% difference from first to last day)
+        improvement = 0
+        if mood_scores[0] != 0:
+            change = ((mood_scores[-1] - mood_scores[0]) / mood_scores[0]) * 100
+            improvement = round(change, 1)
+
+            if improvement > 0:
+                improvement_text = f"📈 Mood improved by {improvement}%"
+            elif improvement < 0:
+                improvement_text = f"📉 Mood dropped by {abs(improvement)}%"
+            else:
+                improvement_text = "➖ Mood stayed the same"
+
+        insights = []
+
+        # General mood insight
+        if average_mood >= 4:
+            insights.append({"text": "Great week! You’re maintaining high positivity.", "icon": "🌞", "category": "positive"})
+        elif average_mood <= 2:
+            insights.append({"text": "This week seems tough. Take time for rest and self-care.", "icon": "💙", "category": "negative"})
+        else:
+            insights.append({"text": "Your mood fluctuated. Tracking helps spot patterns.", "icon": "📊", "category": "neutral"})
+
+        # Stress check
+        if lowest_mood <= 2:
+            insights.append({"text": "Some days were quite low. Try journaling or meditation.", "icon": "🧘", "category": "negative"})
+
+        # Sleep/energy check
+        if average_mood < 3:
+            insights.append({"text": "Consider improving your sleep and daily routine.", "icon": "💤", "category": "wellness"})
+
+        # Improvement insight
+        if improvement > 0:
+            insights.append({"text": "You finished the week stronger — keep that momentum!", "icon": "⚡", "category": "positive"})
+        elif improvement < 0:
+            insights.append({"text": "Your mood dipped towards the end. Reflect on possible triggers.", "icon": "🔍", "category": "negative"})
+
+        # Random wellness tip
+        wellness_tips = [
+            {"text": "Take a short walk outdoors to refresh your mind.", "icon": "🚶", "category": "wellness"},
+            {"text": "Stay hydrated — even water impacts your mood!", "icon": "💧", "category": "wellness"},
+            {"text": "A few minutes of deep breathing can reset stress.", "icon": "🌬️", "category": "wellness"},
+            {"text": "Listening to music you love can lift your energy.", "icon": "🎶", "category": "wellness"},
+            {"text": "Celebrate small wins, even on challenging days.", "icon": "🏆", "category": "positive"},
+        ]
+        insights.append(random.choice(wellness_tips))
+
+    context = {
         'labels': json.dumps(labels),
-        'mood_scores': json.dumps(mood_scores)
-    })
+        'mood_scores': json.dumps(mood_scores),
+        'average_mood': average_mood,
+        'highest_mood': highest_mood,
+        'lowest_mood': lowest_mood,
+        'improvement_text': improvement_text,  # now text + icons
+        'insights': insights,
+    }
+
+    return render(request, 'mood/mood_chart.html', context)
+
+
 
 
 @login_required
