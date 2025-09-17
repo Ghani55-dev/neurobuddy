@@ -12,8 +12,8 @@
   <style>
     :root {
       /* Light Theme Colors */
-      --primary-light: #6a11cb;
-      --secondary-light: #2575fc;
+      --primary-light: #6e8efb;
+      --secondary-light: #a777e3;
       --accent-light: #ff6b6b;
       --text-light: #2c3e50;
       --bg-light: #f8f9fa;
@@ -72,7 +72,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      padding: 1.5rem 5%;
+      padding: 1rem 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -92,7 +92,7 @@
       align-items: center;
       gap: 0.5rem;
       font-weight: 700;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: white;
       text-decoration: none;
     }
@@ -111,7 +111,7 @@
     
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
     }
     
     .nav-links a {
@@ -119,6 +119,7 @@
       text-decoration: none;
       font-weight: 500;
       transition: all 0.3s ease;
+      font-size: 0.95rem;
     }
     
     .light-theme .nav-links a {
@@ -141,6 +142,7 @@
       color: white;
       font-size: 1.5rem;
       cursor: pointer;
+      z-index: 1001;
     }
     
     .light-theme .mobile-menu-btn {
@@ -151,13 +153,13 @@
     .main-container {
       display: flex;
       min-height: 100vh;
-      padding-top: 80px;
+      padding-top: 70px;
     }
 
     /* Left Content Area */
     .content-left {
       flex: 1;
-      padding: 3rem 5%;
+      padding: 2rem 5%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -168,9 +170,9 @@
     .hero-title {
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
-      font-size: 3.5rem;
+      font-size: 2.5rem;
       color: white;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       position: relative;
     }
     
@@ -179,30 +181,31 @@
     }
     
     .hero-subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
       max-width: 600px;
       line-height: 1.8;
     }
     
     .features-list {
       list-style: none;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
     
     .features-list li {
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.8rem;
       font-weight: 500;
+      font-size: 0.95rem;
     }
     
     .features-list i {
       color: #6a11cb;
-      font-size: 1.2rem;
-      width: 30px;
-      height: 30px;
+      font-size: 1.1rem;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -218,14 +221,17 @@
     .cta-buttons {
       display: flex;
       gap: 1rem;
+      flex-wrap: wrap;
     }
     
     .cta-button {
-      padding: 0.8rem 2rem;
+      padding: 0.8rem 1.5rem;
       border-radius: 50px;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.3s ease;
+      font-size: 0.95rem;
+      text-align: center;
     }
     
     .cta-primary {
@@ -285,8 +291,8 @@
     
     .scrolling-image {
       position: absolute;
-      width: 200px;
-      height: 200px;
+      width: 120px;
+      height: 120px;
       border-radius: 20px;
       background: linear-gradient(45deg, #6a11cb, #2575fc);
       opacity: 0.7;
@@ -298,8 +304,8 @@
       left: 10%;
       animation-delay: 0s;
       animation-duration: 25s;
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100px;
     }
     
     .scrolling-image:nth-child(2) {
@@ -307,8 +313,8 @@
       right: 15%;
       animation-delay: 2s;
       animation-duration: 20s;
-      width: 120px;
-      height: 120px;
+      width: 80px;
+      height: 80px;
     }
     
     .scrolling-image:nth-child(3) {
@@ -316,8 +322,8 @@
       left: 20%;
       animation-delay: 4s;
       animation-duration: 30s;
-      width: 180px;
-      height: 180px;
+      width: 120px;
+      height: 120px;
     }
     
     .scrolling-image:nth-child(4) {
@@ -325,8 +331,8 @@
       right: 10%;
       animation-delay: 1s;
       animation-duration: 22s;
-      width: 100px;
-      height: 100px;
+      width: 70px;
+      height: 70px;
     }
     
     .scrolling-image:nth-child(5) {
@@ -334,8 +340,8 @@
       left: 5%;
       animation-delay: 5s;
       animation-duration: 18s;
-      width: 130px;
-      height: 130px;
+      width: 90px;
+      height: 90px;
     }
     
     @keyframes float {
@@ -353,8 +359,8 @@
     /* Auth Container */
     .auth-container {
       width: 100%;
-      max-width: 420px;
-      padding: 2.5rem;
+      max-width: 400px;
+      padding: 2rem;
       background: var(--glass-bg-dark);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -406,7 +412,7 @@
       font-weight: 700;
       text-align: center;
       margin-bottom: 1.5rem;
-      font-size: 2rem;
+      font-size: 1.8rem;
       letter-spacing: -0.5px;
       position: relative;
       padding-bottom: 0.5rem;
@@ -435,6 +441,7 @@
       margin-bottom: 0.5rem;
       display: block;
       transition: all var(--transition-speed) ease;
+      font-size: 0.9rem;
     }
     
     .light-theme .form-label {
@@ -448,7 +455,7 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       background-color: rgba(255, 255, 255, 0.15);
       color: white;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-bottom: 0.5rem;
     }
     
@@ -565,7 +572,7 @@
       padding: 0.75rem;
       border-radius: var(--border-radius);
       transition: all var(--transition-speed) ease;
-      font-size: 1rem;
+      font-size: 0.95rem;
       letter-spacing: 0.5px;
       position: relative;
       overflow: hidden;
@@ -597,9 +604,10 @@
       border-radius: var(--border-radius);
       margin-bottom: 1.5rem;
       border: none;
-      padding: 1rem;
+      padding: 0.8rem;
       position: relative;
       overflow: hidden;
+      font-size: 0.9rem;
     }
 
     .alert::after {
@@ -662,14 +670,14 @@
     /* Theme Toggle */
     .theme-toggle {
       position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.2rem;
+      right: 1.2rem;
       background: rgba(255, 255, 255, 0.15);
       border: none;
       color: white;
       border-radius: 50%;
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -709,7 +717,7 @@
       color: white;
       border: none;
       border-radius: var(--border-radius);
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 500;
       cursor: pointer;
       transition: all var(--transition-speed) ease;
@@ -727,7 +735,7 @@
     }
 
     .google-btn i {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     /* Divider */
@@ -736,7 +744,7 @@
       align-items: center;
       margin: 1.5rem 0;
       color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     
     .light-theme .divider {
@@ -761,7 +769,7 @@
       display: flex;
       justify-content: space-between;
       margin-top: 1rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     /* Register Link */
@@ -770,6 +778,7 @@
       margin-top: 1.5rem;
       padding-top: 1.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.9rem;
     }
     
     .light-theme .register-link {
@@ -823,7 +832,7 @@
     .mobile-nav-links a {
       color: white;
       text-decoration: none;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 500;
       padding: 0.5rem 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -870,22 +879,36 @@
     /* Responsive Adjustments */
     @media (max-width: 1200px) {
       .hero-title {
-        font-size: 3rem;
+        font-size: 2.2rem;
       }
     }
 
     @media (max-width: 992px) {
       .main-container {
         flex-direction: column;
+        padding-top: 60px;
       }
       
-      .content-right {
+      .content-left, .content-right {
         flex: 1;
         padding: 2rem 5%;
       }
       
       .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        text-align: center;
+      }
+      
+      .hero-subtitle {
+        text-align: center;
+      }
+      
+      .features-list {
+        text-align: left;
+      }
+      
+      .cta-buttons {
+        justify-content: center;
       }
       
       .mobile-menu-btn {
@@ -895,56 +918,32 @@
       .nav-links {
         display: none;
       }
+      
+      .auth-container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
     }
 
     @media (max-width: 768px) {
+      .logo {
+        font-size: 1.3rem;
+      }
+      
       .logo span {
         display: none;
       }
       
       .hero-title {
-        font-size: 2.2rem;
-      }
-      
-      .features-list li {
-        font-size: 0.95rem;
-      }
-      
-      .cta-buttons {
-        flex-wrap: wrap;
-      }
-      
-      .theme-toggle {
-        top: 1rem;
-        right: 1rem;
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .auth-container {
-        padding: 1.5rem;
-      }
-      
-      .auth-container h2 {
-        font-size: 1.5rem;
-      }
-      
-      .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
       
       .hero-subtitle {
         font-size: 1rem;
       }
       
-      .content-left, .content-right {
-        padding: 2rem 1.5rem;
-      }
-      
-      .main-header {
-        padding: 1rem 1.5rem;
+      .features-list li {
+        font-size: 0.9rem;
       }
       
       .cta-buttons {
@@ -953,26 +952,106 @@
       
       .cta-button {
         width: 100%;
-        text-align: center;
+      }
+      
+      .theme-toggle {
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+      }
+      
+      .auth-container {
+        padding: 1.5rem;
+      }
+      
+      .auth-container h2 {
+        font-size: 1.5rem;
       }
       
       .mobile-nav {
         width: 85%;
+        padding: 4rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .main-header {
+        padding: 0.8rem 1rem;
+      }
+      
+      .content-left, .content-right {
+        padding: 1.5rem 1rem;
+      }
+      
+      .hero-title {
+        font-size: 1.6rem;
+      }
+      
+      .features-list li {
+        font-size: 0.85rem;
+      }
+      
+      .auth-container {
+        padding: 1.2rem;
+      }
+      
+      .auth-container h2 {
+        font-size: 1.3rem;
+      }
+      
+      .form-control {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+      }
+      
+      .btn-primary {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+      
+      .google-btn {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+      }
+      
+      .mobile-nav-links a {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body class="dark-theme">
   <header class="main-header">
-    <a href={% static 'js/logo.png' %} class="logo">🧠NeuroBuddy AI-Powered Platform<span> </span></a>
+    <a href="#" class="logo">🧠NeuroBuddy<span>AI</span></a>
     
     <nav class="nav-links">
-     <a href="{% url 'features' %}">Features</a>
-     {% comment %} <a href="{% url 'pricing' %}">Pricing</a> {% endcomment %}
-     <a href="{% url 'about' %}">About</a>
-     <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'features' %}">Features</a>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
     </nav>
+    
+    <button class="mobile-menu-btn" id="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
   </header>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="close-menu" id="close-menu">
+      <i class="fas fa-times"></i>
+    </button>
+    <nav class="mobile-nav-links">
+      <a href="{% url 'features' %}">Features</a>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'register' %}">Register</a>
+    </nav>
+  </div>
+  
+  <div class="overlay" id="overlay"></div>
 
   <button class="theme-toggle" id="theme-toggle">
     <i class="fas fa-sun" id="theme-icon"></i>
@@ -1081,6 +1160,26 @@
     const toggleBtn = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const body = document.body;
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu');
+    const mobileNav = document.getElementById('mobile-nav');
+    const overlay = document.getElementById('overlay');
+
+    // Mobile menu functionality
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileNav.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeMenuBtn.addEventListener('click', closeMobileMenu);
+    overlay.addEventListener('click', closeMobileMenu);
+
+    function closeMobileMenu() {
+      mobileNav.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
 
     // Load saved theme
     function loadTheme() {
@@ -1115,15 +1214,17 @@
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('id_password');
 
-    togglePassword.addEventListener('click', function() {
-      // Toggle the type attribute
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      
-      // Toggle the eye icon
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function() {
+        // Toggle the type attribute
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle the eye icon
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    }
 
     // Initialize theme
     document.addEventListener('DOMContentLoaded', loadTheme);

@@ -18,7 +18,7 @@
       --primary-light: #6a11cb;
       --secondary-light: #2575fc;
       --text-light: #2c3e50;
-      --bg-light:rgba(59, 255, 255, 0.61);
+      --bg-light: rgba(59, 255, 255, 0.61);
       --card-light: #ffffff;
       --border-light: rgba(0, 0, 0, 0.1);
       --text-muted-light: #6c757d;
@@ -46,6 +46,7 @@
       color: var(--text-light);
       overflow-x: hidden;
       line-height: 1.6;
+      padding-top: 70px; /* Space for fixed navbar */
     }
 
     /* Dark Theme */
@@ -107,6 +108,11 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       transition: all var(--transition-speed) ease;
       padding: 0.8rem 1rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
     }
 
     .dark-theme .navbar {
@@ -116,12 +122,27 @@
 
     .navbar-brand {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       transition: all 0.3s ease;
       color: white !important;
+      margin-right: 1rem;
+    }
+
+    .navbar-toggler {
+      border: none;
+      padding: 0.25rem 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+
+    .navbar-collapse {
+      flex-grow: 0;
     }
 
     /* Theme Toggle */
@@ -129,7 +150,7 @@
       position: relative;
       overflow: hidden;
       border-radius: 50px;
-      padding: 0.35rem 1rem;
+      padding: 0.35rem 0.8rem;
       transition: all 0.3s ease;
       border: none;
       background: rgba(255, 255, 255, 0.15);
@@ -137,6 +158,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
     }
 
     .dark-theme #theme-toggle {
@@ -157,8 +180,8 @@
 
     /* Content Blocks */
     .content-block {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem;
       border-radius: 8px;
       background-color: var(--card-light);
       transition: all var(--transition-speed) ease;
@@ -170,9 +193,10 @@
 
     .content-block h2 {
       color: var(--primary-light);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--border-light);
+      font-size: 1.5rem;
     }
 
     .dark-theme .content-block h2 {
@@ -181,7 +205,7 @@
     }
 
     .content-block ul {
-      padding-left: 1.5rem;
+      padding-left: 1.25rem;
     }
 
     .content-block li {
@@ -202,15 +226,81 @@
       color: var(--primary-dark);
     }
 
-    /* Particles Background */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
+    /* Welcome Message */
+    .welcome-message {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.25rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message h2 {
+      color: white !important;
+      border-bottom: none;
+      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+    }
+
+    .welcome-message p {
+      color: rgba(255, 255, 255, 0.9) !important;
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    /* Buttons */
+    .btn {
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-outline-light {
+      border-color: rgba(255, 255, 255, 0.5);
+      color: white;
+    }
+
+    .btn-outline-light:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+
+    .download-btn {
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .download-btn:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+      color: white;
+    }
+
+    /* Navbar Navigation */
+    .navbar-nav {
+      align-items: center;
+    }
+
+    .nav-item {
+      margin: 0.25rem 0;
     }
 
     /* Animations */
@@ -242,57 +332,157 @@
     .dark-theme ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
     }
-   
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 60px;
+      }
+      
+      .navbar {
+        padding: 0.6rem 1rem;
+      }
+      
+      .navbar-brand {
+        font-size: 1.1rem;
+      }
+      
+      .container {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      
+      .content-block {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .content-block h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      
+      .welcome-message {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .welcome-message h2 {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+      }
+      
+      .download-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+      
+      #theme-toggle {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 1rem;
+      }
+      
+      .navbar-brand i {
+        margin-right: 0.3rem;
+      }
+      
+      .content-block {
+        padding: 0.8rem;
+      }
+      
+      .content-block h2 {
+        font-size: 1.2rem;
+      }
+      
+      .welcome-message h2 {
+        font-size: 1.1rem;
+      }
+      
+      .welcome-message p {
+        font-size: 0.85rem;
+      }
+      
+      .btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body id="main-body">
-  <!-- Background Particles -->
-  <div class="particles" id="particles-js"></div>
-  
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% static 'js/logo.png' %}">
-        <i class="fas fa-brain me-2"></i>NeuroPulse
-
-      <div class="d-flex align-items-center">
-        {% if user.is_authenticated %}
-          <div class="position-relative me-3">
-           <form method="POST" action="{% url 'logout' %}" style="display: inline;">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-</form>
-
-          </div>
-        {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light me-3">
-            <i class="fas fa-sign-in-alt me-1"></i> Login
-          </a>
-        {% endif %}
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-brain me-1"></i>NeuroPulse
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+              aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">
+                  <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a href="{% url 'login' %}" class="btn btn-outline-light me-2">
+                <i class="fas fa-sign-in-alt me-1"></i> Login
               </a>
-      <a class="navbar-brand" href="{% static 'apk/app-release.apk' %}" download>
-                        <i class="fas fa-brain me-2"></i><button style="padding:5px 16px; background:#2196F3; color:white; 
-                                       border:none; border-radius:61px; cursor:pointer;">
-                            📲 Download App
-                        </button>
-                    </a>
-        <button id="theme-toggle" class="btn btn-sm">
-          <i class="fas fa-moon me-1" id="theme-icon"></i>
-          <span id="theme-text">Dark Mode</span>
-        </button>
-        
+            </li>
+          {% endif %}
+          
+          <li class="nav-item">
+            <a class="download-btn" href="{% static 'apk/app-release.apk' %}" download>
+              <i class="fas fa-download"></i> Download App
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <button id="theme-toggle" class="btn">
+              <i class="fas fa-moon me-1" id="theme-icon"></i>
+              <span id="theme-text">Dark Mode</span>
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
-<div class="bg-indigo-600 text-white p-4 rounded-2xl shadow mb-5">
-  <h2 class="text-2xl font-semibold" style="color: blue;">{{ welcome_message }}</h2>
-  <p class="text-sm mt-1" style="color: blue;">Here's your personalized mood & wellness insights 🌱</p>
-</div>
 
   <!-- Main Content -->
   <div class="container">
+    <!-- Welcome Message -->
+    {% if welcome_message %}
+    <div class="welcome-message animate__animated animate__fadeIn">
+      <h2>{{ welcome_message }}</h2>
+      <p>Here's your personalized mood & wellness insights 🌱</p>
+    </div>
+    {% endif %}
+    
     {% block content %}{% endblock %}
   </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     const toggleBtn = document.getElementById('theme-toggle');
@@ -334,6 +524,16 @@
 
     // Initialize theme
     document.addEventListener('DOMContentLoaded', loadTheme);
+
+    // Close navbar when clicking on a link (mobile)
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const navbarCollapse = document.getElementById('navbarContent');
+        if (navbarCollapse.classList.contains('show')) {
+          new bootstrap.Collapse(navbarCollapse).hide();
+        }
+      });
+    });
   </script>
 </body>
 </html>
