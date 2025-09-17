@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*b1*jwtqecv_%ri41kbh8binof#-n=!w)5v876qn1+!ywfo*%!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'neurobuddy.onrender.com']
 
 
@@ -177,7 +177,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ganamunna143@gmail.com'
 EMAIL_HOST_PASSWORD = 'yhvz sfyj zzkl lzav'  # use an App Password if using Gmail
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = "neurobuddyjm55@gmail.com"
 
 
 
@@ -192,6 +192,8 @@ AUTHENTICATION_BACKENDS = (
 # settings.py
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -234,3 +236,13 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "https://neurobuddy.onrender.com",
 ]
+# Cookie Settings
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
+
+# Allow WebView User-Agent
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True

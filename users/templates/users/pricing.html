@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="text-center py-5 bg-light">
+  <div class="container">
+    <h1 class="display-5 fw-bold">Pricing Plans</h1>
+    <p class="lead text-muted">Simple and transparent pricing</p>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-primary shadow-sm text-center">
+          <div class="card-header bg-primary text-white">Free Plan</div>
+          <div class="card-body">
+            <h2 class="card-title">$0</h2>
+            <p>Basic features for getting started</p>
+            <ul class="list-unstyled">
+              <li>✔ AI Mood Tracking</li>
+              <li>✔ Journaling</li>
+              <li>✔ Limited Video Access</li>
+            </ul>
+            <a href="#" class="btn btn-outline-primary">Get Started</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-success shadow-sm text-center">
+          <div class="card-header bg-success text-white">Pro Plan</div>
+          <div class="card-body">
+            <h2 class="card-title">$9.99 / mo</h2>
+            <p>Unlock all premium features</p>
+            <ul class="list-unstyled">
+              <li>✔ Everything in Free</li>
+              <li>✔ Full Video Library</li>
+              <li>✔ Guided Exercises</li>
+              <li>✔ AI Chat Support</li>
+            </ul>
+            <a href="#" class="btn btn-success">Go Pro</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-warning shadow-sm text-center">
+          <div class="card-header bg-warning text-white">Enterprise</div>
+          <div class="card-body">
+            <h2 class="card-title">Custom</h2>
+            <p>Best for teams & organizations</p>
+            <ul class="list-unstyled">
+              <li>✔ Custom Features</li>
+              <li>✔ Team Dashboards</li>
+              <li>✔ Dedicated Support</li>
+            </ul>
+            <a href="#" class="btn btn-warning">Contact Us</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -251,9 +252,9 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="{% static 'js/logo.png' %}">
         <i class="fas fa-brain me-2"></i>NeuroPulse
-      </a>
+
       <div class="d-flex align-items-center">
         {% if user.is_authenticated %}
           <div class="position-relative me-3">
@@ -268,11 +269,18 @@
             <i class="fas fa-sign-in-alt me-1"></i> Login
           </a>
         {% endif %}
-        
+              </a>
+      <a class="navbar-brand" href="{% static 'apk/app-release.apk' %}" download>
+                        <i class="fas fa-brain me-2"></i><button style="padding:5px 16px; background:#2196F3; color:white; 
+                                       border:none; border-radius:61px; cursor:pointer;">
+                            📲 Download App
+                        </button>
+                    </a>
         <button id="theme-toggle" class="btn btn-sm">
           <i class="fas fa-moon me-1" id="theme-icon"></i>
           <span id="theme-text">Dark Mode</span>
         </button>
+        
       </div>
     </div>
   </nav>

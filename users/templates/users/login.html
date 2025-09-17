@@ -1,4 +1,5 @@
 {% load socialaccount %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -963,14 +964,13 @@
 </head>
 <body class="dark-theme">
   <header class="main-header">
-    <a href="static/js/logo.png" class="logo">🧠NeuroBuddy<span> AI-Powered Mental Wellness & Mood Monitoring Platform</span></a>
+    <a href={% static 'js/logo.png' %} class="logo">🧠NeuroBuddy AI-Powered Platform<span> </span></a>
     
     <nav class="nav-links">
-      {% comment %} <a href="#">Home</a>
-      <a href="#">Features</a>
-      <a href="#">Pricing</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a> {% endcomment %}
+     <a href="{% url 'features' %}">Features</a>
+     {% comment %} <a href="{% url 'pricing' %}">Pricing</a> {% endcomment %}
+     <a href="{% url 'about' %}">About</a>
+     <a href="{% url 'contact' %}">Contact</a>
     </nav>
   </header>
 
